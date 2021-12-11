@@ -1,0 +1,21 @@
+:root{
+--primary-color :           #3C7061;
+--primary-lightest-color :  #FBFFFE;
+--primary-light-color :     #88AFA3;
+--primary-dark-color :      #164436;
+--primary-darkest-color :   #000403;
+--secondary1-color:         #564374;
+--secondary1-lighest-color: #FCFBFF;
+--secondary1-light-color:   #9D90B4;
+--secondary1-dark-color:    #2B1B46;
+--secondary1-darkest-color: #020105;
+--secondary2-color:         #AAAA5B;
+--secondary2-lightest-color:#FFFFFB;
+--secondary2-light-color:   #FFFFC6;
+--secondary2-dark-color:    #666622;
+--secondary2-darkest-color: #070700;
+}
+
+body{
+    background-color: var(--primary4-color);
+}
