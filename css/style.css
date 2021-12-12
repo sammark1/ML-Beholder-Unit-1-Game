@@ -48,6 +48,9 @@ header{
 }
 .status{
     color: var(--secondary2-color);
+    margin-right: 0.5em;
+}
+.material-icons{
     margin-right: 1em;
 }
 #imgDisplay{
