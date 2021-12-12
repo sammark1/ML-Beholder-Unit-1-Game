@@ -17,5 +17,37 @@
 }
 
 body{
-    background-color: var(--primary4-color);
+    background-color: var(--primary-darkest-color);
+    color:white;
+}
+#page{
+    background-color: var(--primary-darkest-color);
+    display: flex;
+    height: 97vh;
+    max-width: 900px;
+    flex-direction: column;
+}
+#page > *{
+    padding:0.5em;
+}
+#header{
+    background-color: var(--primary-dark-color);
+    height: 2em;
+}
+#imgDisplay{
+    background-color: var(--primary-darkest-color);
+    flex-grow: 1;
+}
+#statsBar{
+    background-color: var(--primary-dark-color);
+    height:3em;
+}
+
+#flavorText{
+    background-color: var(--primary-color);
+    height: 8em;
+}
+#choices{
+    background-color: var(--primary-color);
+    height: 8em;
 }
