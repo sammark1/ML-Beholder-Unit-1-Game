@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Modern+Antiqua&display=swap');
 :root{
 --primary-color :           #3C7061;
 --primary-lightest-color :  #FBFFFE;
@@ -19,35 +20,79 @@
 body{
     background-color: var(--primary-darkest-color);
     color:white;
+    font-family: 'Modern Antiqua', cursive;
+    font-size: 14pt;
 }
 #page{
     background-color: var(--primary-darkest-color);
+    margin: auto;
     display: flex;
     height: 97vh;
     max-width: 900px;
     flex-direction: column;
+    text-align: center;
 }
 #page > *{
     padding:0.5em;
 }
-#header{
+header{
     background-color: var(--primary-dark-color);
     height: 2em;
+    display: flex;
+    align-items: center;
+}
+.beholderName{
+    color: var(--secondary2-light-color);
+}
+.status{
+    color: var(--secondary2-color);
+    margin-right: 1em;
 }
 #imgDisplay{
-    background-color: var(--primary-darkest-color);
     flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+#imgDisplay > img{
+    max-width: 75%;
+    max-height: 75%;
+    /*border: var(--secondary1-color) 1pt solid;*/
 }
 #statsBar{
     background-color: var(--primary-dark-color);
     height:3em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 #flavorText{
+    color:var(--secondary2-light-color);
     background-color: var(--primary-color);
-    height: 8em;
+    height: 10em;
 }
 #choices{
     background-color: var(--primary-color);
-    height: 8em;
+    border-top: 3px solid var(--secondary1-dark-color);
+    height: 10em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-around;
+    row-gap: 10px;
+    column-gap: 20px;
+}
+#choices>*{
+    font-family: 'Modern Antiqua', cursive;;
+    font-size: 12pt;
+    color: var(--secondary2-light-color);
+    background-color: var(--secondary2-color);
+    border: var(--primary-dark-color) 3px solid;
+    border-radius: 6px;
+    height: 3em;
+    max-width: 50%;
+    flex-grow: 1;
 }
