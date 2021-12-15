@@ -9,25 +9,36 @@ let beholder ={
     maxEyestalks:10,
     maxSanity:10,
     maxHappiness:5,
-    HP:0,
+    HP:6,
     eyestalks:0,
     sanity:3,
     happiness:0,
 };
-let currentRoom = 0;
+let currentRoom = 5;
 //ANCHOR Referential objects and arrays
 const happinessIcons=[
+    'mood_bad',
     'sentiment_very_dissatisfied',
     'sentiment_dissatisfied',
     'sentiment_neutral',
     'sentiment_satisfied',
     'sentiment_very_satisfied',
 ];
+const hpIcons =[
+    'favorite',
+    'favorite_border',
+]
 //ANCHOR JQuery declarations
-const $displayRoom = $('header').eq(1);
 const $displayBhName =$('.beholderName');
 const $displayText = $('#displayText');
 const $choices = $('#choices');
+const $displays = {
+    disRoomNum:$('.dynDisp').eq(0),
+    disHP:$('.material-icons').eq(0),
+    disEyestalks:$('.dynDisp').eq(2),
+    disSanity:$('.dynDisp').eq(3),
+    disHappiness:$('.material-icons').eq(1),
+}
 
 //!SECTION
 //=========================================================
@@ -39,8 +50,24 @@ function clearAll(){
     $displayText.text('');
 }
 //ANCHOR update status displays
+//NOTE DO THIS FUNCTION NEXT PLZ.
 function updateStatDisp(){
     $displayBhName.text(beholder.name);
+    $displays.disRoomNum.text(currentRoom);
+    //hp translation
+    {
+        let hearts = '';
+        for(i=0;i<beholder.HP;i++){
+            hearts+=`${hpIcons[0]} `;
+        }
+        for(i=0;i<(6-beholder.HP);i++){
+            hearts+=`${hpIcons[1]} `;
+        }
+        $displays.disHP.text(hearts);
+    }   
+    $displays.disEyestalks.text(beholder.eyestalks);
+    $displays.disSanity.text(beholder.sanity);
+    $displays.disHappiness.text(happinessIcons[beholder.happiness])
 }
 //ANCHOR get displayText
 function getDisplayText(target){
@@ -120,7 +147,7 @@ const exampleRoom = {
 //testing
 clearAll();
 assembleRoom(exampleRoom);
-$("#happiness").children().text(happinessIcons[4]);
+//("#happiness").children().text(happinessIcons[5]);
 
 //!SECTION
 //=========================================================
@@ -134,6 +161,7 @@ $("#happiness").children().text(happinessIcons[4]);
 function secret(e){
     console.log(e.code)
     if(e.code !== "KeyB"){
+        $('#style')[0].href="css/style.css"
         return;
     }
     $('#style')[0].href="css/trueStyle.css"

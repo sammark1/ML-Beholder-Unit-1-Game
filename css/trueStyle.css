@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Crafty+Girls&display=swap');
 :root{
     --primary-color :           #C8D53A;
     --primary-lighter-color:    #E9FF00;
@@ -10,14 +11,24 @@
 body{
     background-color: var(--primary-color);
     color:var(--primary-lighter-color);
+    font-family: 'Comic Neue', cursive;
 }
 div{
     display:flex;
     flex-direction: row;
     flex-wrap: wrap-reverse;
     align-content: flex-end;
+    justify-content: center;
     font-size: 22pt;
     background-color: var(--secondary2-color);
+    border-radius: 1em;
+    height: 10em;   
+}
+div > div:first-child{
+    background-color: var(--secondary1-color);
+}
+span{
+    color: magenta;
 }
 img{
     max-width: 123px;
@@ -26,9 +37,18 @@ h1{
  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
  color: var(--secondary2-ligher-color);
 }
+h2 h3 h4{
+    font-family: 'Crafty Girls', cursive;
+}
 ul ol > *{
     background-color: var(--secondary2-color);
-    font-family: 'Courier New', Courier, monospace;
     text-align: end;
     border:1em dotted beige;
+}
+button{
+    font-family: 'Crafty Girls', cursive;
+    width:fit-content;
+    background-color: lightcoral;
+    font-size: x-large;
+    color: var(--secondary2-color);
 }
