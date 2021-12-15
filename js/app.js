@@ -62,20 +62,23 @@ function addChoice(choicesIndex,text){
 //ANCHOR assemble room
 function assembleRoom(roomObj){
     updateStatDisp();
-    //get a random room from a list excluding previous explored rooms
+    //REVIEW get a random room from a list excluding previous explored rooms
     getDisplayText(roomObj.textEnter);
+    //create buttons loop
     for(i=0;i<roomObj.choices.length;i++){
         addChoice(i,roomObj.choices[i].text);//include the target texthere?
-        //$(`#button${i}`).on('click',function(){test(i)});
     };
+    //add event listeners to buttons
     $choices.children('button').each(function(index){
-        $(this).on('click',function(){test(index)})
+        $(this).on('click',function(){userChoice(index)})
     });
 }
-//REVIEW
-function test(i){
-    console.log("button: "+i);
+//ANCHOR user selection result
+function userChoice(choiceIndex){
+    console.log("user clicked button ",choiceIndex);
+    setTimeout(exampleRoom.choices[choiceIndex].result,1);
 }
+
 
 //!SECTION
 //=========================================================
@@ -86,15 +89,15 @@ const exampleRoom = {
     choices:[
         {
             text:"Eye Ray!",
-            result:"console.log('choice 1');"
+            result:"console.log('choice 1 is wacky');"
         },
         {
             text:"Politely ask the wall to move",
-            result:"console.log('choice 2');"
+            result:"console.log('choice 2 is wackier');"
         },
         {
             text:"Hello buttface",
-            result:"console.log('choice 3');"
+            result:"console.log('choice 3 oh really.');"
         }
     ]
 }
