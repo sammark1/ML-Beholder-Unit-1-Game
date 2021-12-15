@@ -11,7 +11,7 @@ let beholder ={
     maxHappiness:5,
     HP:0,
     eyestalks:0,
-    sanity:0,
+    sanity:3,
     happiness:0,
 };
 let currentRoom = 0;
@@ -70,13 +70,24 @@ function assembleRoom(roomObj){
     };
     //add event listeners to buttons
     $choices.children('button').each(function(index){
-        $(this).on('click',function(){userChoice(index)})
+        $(this).on('click',function(){userChoice(roomObj,index)})
     });
 }
 //ANCHOR user selection result
-function userChoice(choiceIndex){
-    console.log("user clicked button ",choiceIndex);
-    setTimeout(exampleRoom.choices[choiceIndex].result,1);
+function userChoice(roomObj,choiceIndex){
+    //console.log("user clicked button ",choiceIndex);
+    const choice = roomObj.choices[choiceIndex];
+    console.log(setTimeout(choice.contest,1))
+    if(eval(choice.contest)){
+        setTimeout(choice.resultWin,1);
+        getDisplayText(choice.textResultWin);
+    }
+    else{
+        setTimeout(choice.resultFail,1);
+        getDisplayText(choice.textResultFail);
+    }
+    //setTimeout(roomObj.choices[choiceIndex].result,1);//stats changed
+    //getDisplayText(roomObj.choices[choiceIndex].textResult);
 }
 
 
@@ -89,22 +100,32 @@ const exampleRoom = {
     choices:[
         {
             text:"Eye Ray!",
-            result:"console.log('choice 1 is wacky');"
+            contest:'beholder.eyestalks>=2',
+            resultFail:"console.log('choice 1 failed');",
+            textResultFail:`${beholder.name} shoots the wall with an eye ray! unfortunately they use their petrify beam and freeze the wall in place permanantly. They have to find another way around. Happiness▼`,
+            resultWin:"console.log('choice 1 win!');",
+            textResultWin:`${beholder.name} shoots the wall with an eye ray! It disintegrates right before their gleeful face. Happiness▲, eyestalks▲`,
+
         },
         {
             text:"Politely ask the wall to move",
-            result:"console.log('choice 2 is wackier');"
+            contest:'beholder.sanity<=2',
+            resultFail:"console.log('choice 1 failed');",
+            textResultFail:`${beholder.name} politely asks the wall to move. The wall stands still. What a silly thing to do. Happiness▼`,
+            resultWin:"console.log('choice 1 win!');",
+            textResultWin:`${beholder.name} politely asks the wall to move. The wall takes a sweeping bow and shifts aside. ${beholder.name} is very pleased with themself. Happiness▲, sanity▼`,
         },
-        {
-            text:"Hello buttface",
-            result:"console.log('choice 3 oh really.');"
-        }
     ]
 }
 //testing
 clearAll();
 assembleRoom(exampleRoom);
 $("#happiness").children().text(happinessIcons[4]);
+
+//!SECTION
+//=========================================================
+//SECTION 5: Win/Lose Conditions
+//=========================================================
 
 //!SECTION
 //=========================================================
@@ -119,3 +140,5 @@ function secret(e){
     console.log($('#style')[0].href);
 }
 document.addEventListener('keypress', secret);
+
+//TODO INCLUDE DETAILS OF STAT CHANGES IN FLAVOR TEXT: A->B
