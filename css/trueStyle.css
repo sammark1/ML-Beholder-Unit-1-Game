@@ -1,0 +1,34 @@
+:root{
+    --primary-color :           #C8D53A;
+    --primary-lighter-color:    #E9FF00;
+    --secondary1-color:         hsl(112, 100%, 50%);
+    --secondary1-lighter-color: hsl(112, 100%, 50%);
+    --secondary2-color:         #702C90;
+    --secondary2-ligher-color:  #B10AFF;
+}
+
+body{
+    background-color: var(--primary-color);
+    color:var(--primary-lighter-color);
+}
+div{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap-reverse;
+    align-content: flex-end;
+    font-size: 22pt;
+    background-color: var(--secondary2-color);
+}
+img{
+    max-width: 123px;
+}
+h1{
+ font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+ color: var(--secondary2-ligher-color);
+}
+ul ol > *{
+    background-color: var(--secondary2-color);
+    font-family: 'Courier New', Courier, monospace;
+    text-align: end;
+    border:1em dotted beige;
+}

@@ -3,41 +3,44 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <script
+        src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous"></script>
         <script src="js/app.js" async defer></script>
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" href="css/style.css">
+        <link id="style" rel="stylesheet" href="css/style.css">
     </head>
     <body>
         <div id="page">
             <header>
-                <h3 class="status"><span class="beholderName">Nibbles</span> enters room </h3>
-                <h3 class="status" class="dynDisp">10</h3>
+                <h3 class="status"><span class="beholderName">Unnamed</span> enters room </h3>
+                <h3 class="status dynDisp">10</h3>
             </header>
             <div id="imgDisplay">
             <img src="https://cdn.discordapp.com/attachments/909883040879243274/919699796246269972/BeholderFlavor01.png" alt="BeholderFlavor01">
             </div>
             <div id="statsBar">
                 <h3 class="status">HP: </h3>
-                <h3 class="status" class = "dynDisp">
+                <h3 class="status dynDisp">
                     <span class="material-icons">favorite favorite favorite favorite favorite_border favorite_border</span>
                 </h3>
                 <h3 class="status">Eyestalks: </h3>
-                <h3 class="status" class="dynDisp">100</h3>
+                <h3 class="status dynDisp">100</h3>
                 <h3 class="status">Sanity: </h3>
-                <h3 class="status" class="dynDisp">100</h3>
+                <h3 class="status dynDisp">100</h3>
                 <h3 class="status">Happiness: </h3>
-                <h3 class="status" class="dynDisp">
-                    <span class="material-icons">mood</span>
+                <h3 class="status dynDisp" id="happiness">
+                    <span class="material-icons"></span>
                 </h3>
             </div>
-            <div id="flavorText">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed est labore voluptas facilis dolores aspernatur dicta, cum autem reprehenderit nobis quod cupiditate quos dolorum, asperiores id mollitia ut quidem deleniti!
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Id aspernatur ex odit consectetur quam numquam est alias delectus ipsa doloremque pariatur ea et, veritatis nobis obcaecati, quo quibusdam officiis aliquid.
+            <div id="displayText">
             </div>
             <div id="choices">
+                <!-- These should be generated and deleted at runtime -->
                 <button type="button">Choice 1 is verbose and lengthy</button>
                 <button type="button">Choice 2</button>
                 <button type="button">Choice 333333333</button>

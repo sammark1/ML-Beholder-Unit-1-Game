@@ -46,6 +46,7 @@ header{
 .beholderName{
     color: var(--secondary2-light-color);
 }
+
 .status{
     color: var(--secondary2-color);
     margin-right: 0.5em;
@@ -61,9 +62,7 @@ header{
     
 }
 #imgDisplay > img{
-    max-width: 75%;
-    max-height: 75%;
-    /*border: var(--secondary1-color) 1pt solid;*/
+    max-width: 70%;
 }
 #statsBar{
     background-color: var(--primary-dark-color);
@@ -75,19 +74,21 @@ header{
     border-top-right-radius: 6px;
 }
 
-#flavorText{
+#displayText{
     color:var(--secondary2-light-color);
     background-color: var(--primary-color);
-    height: 10em;
+    max-height: 6em;
+    min-height: 6em;
 }
 #choices{
     background-color: var(--primary-color);
-    border-top: 3px solid var(--secondary1-dark-color);
-    height: 10em;
+    /*border-top: 3px solid var(--primary-dark-color);*/
+    min-height: 6em;
+    max-height: 6em;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    align-content: center;
+    align-content: flex-start;
     justify-content: space-around;
     row-gap: 10px;
     column-gap: 20px;
