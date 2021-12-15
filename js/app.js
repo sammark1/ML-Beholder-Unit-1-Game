@@ -47,8 +47,11 @@ function getDisplayText(target){
     $displayText.text(target);
 }
 //ANCHOR add choice
-function addChoice(text, target){
-    $choices.append(`<button type="button">${text}</button>`);
+function addChoice(choicesIndex,text){
+    //let $button =$(`<button type="button" id="button${choicesIndex}">${text}</button>`);
+    let $button =$(`<button type="button" id="button">${text}</button>`);
+    $choices.append($button);
+    return($button)
 }
 
 //!SECTION
@@ -62,8 +65,16 @@ function assembleRoom(roomObj){
     //get a random room from a list excluding previous explored rooms
     getDisplayText(roomObj.textEnter);
     for(i=0;i<roomObj.choices.length;i++){
-        addChoice(roomObj.choices[i].text)//include the target texthere?
-    }
+        addChoice(i,roomObj.choices[i].text);//include the target texthere?
+        //$(`#button${i}`).on('click',function(){test(i)});
+    };
+    $choices.children('button').each(function(index){
+        $(this).on('click',function(){test(index)})
+    });
+}
+//REVIEW
+function test(i){
+    console.log("button: "+i);
 }
 
 //!SECTION
@@ -75,15 +86,15 @@ const exampleRoom = {
     choices:[
         {
             text:"Eye Ray!",
-            result:"here goes gameflow function call to be executed using setTimeout()"
+            result:"console.log('choice 1');"
         },
         {
             text:"Politely ask the wall to move",
-            result:"here goes gameflow function call to be executed using setTimeout()"
+            result:"console.log('choice 2');"
         },
         {
-            text:"Hello Gorgeous",
-            result:"console.log('smooth like butter');"
+            text:"Hello buttface",
+            result:"console.log('choice 3');"
         }
     ]
 }
