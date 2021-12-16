@@ -1,11 +1,22 @@
 /*TODO
---add intro page
---add more rooms
 --add boss rooms
 --add/fix results for bottomed stats
 --shuffle standard rooms array then run down the list
+--add more rooms
 --manage art
 --add more art
+
+HP doesn't often increase and is more likely to decrease in clearly dangerous situations. only ever decrease by 1 at a time
+eyestalks is like exp and increases with success. every room should have at least one option to increase eyestalks.
+sanity is a chaotic element. low sanity results in counterintuitive results, while high sanity results in straightforward results
+    if sanity is at its minimum, possibly provide an unusual and dangerous encounter
+happiness is a safeguard against many dangers from within the mind of the beholder.
+    when happiness is at minimum, each event can have a random effect
+        HP++ because beholder feels sorry for themselves
+        HP-- becasue beholder's eyestalks are angry with eachother
+        sanity-- because beholder is down in the dumps
+        eyestalks-- because beholder doesn't trust one of them
+    unusual encounter of unhappiness
 */
 //=========================================================
 //SECTION 1:Global Delcarations
@@ -134,7 +145,6 @@ function newGame(){
     });
 
 }
-//NOTE bookmark here
 //ANCHOR show intro
 function showIntro1(){
     $popover.show();
@@ -157,12 +167,17 @@ function resetAll(){
     beholder.sanity=0;
     beholder.happiness=2;
     currentRoom=0;
-
+    //NOTE CHEAT OVERRIDE ON STATS
+    beholder.eyestalks=0   ;
+    beholder.sanity=beholder.maxSanity;
+    beholder.happiness=beholder.maxHappiness;
 }
 //ANCHOR get appropriate room
 function getRoom(){
     $popover.hide();
-    assembleRoom(getRoomsList()[randomNum(0,getRoomsList().length)])
+    //assembleRoom(getRoomsList()[randomNum(0,getRoomsList().length)])
+    //NOTE CHEAT OVERRIDE ON WHICH ROOM TO VIEW
+    assembleRoom(getRoomsList()[3])
 }
 //ANCHOR assemble room
 function assembleRoom(roomObj){
@@ -242,13 +257,24 @@ function gameOver(){
 //=========================================================
 //SECTION 6: Global Gameflow Object Declarations
 //=========================================================
-function getRoomsList(){
+function getRoomsList(list){
+    //choice format:
+    /*
+    {
+        text:"choice x",
+        contest:'',
+        resultFail:'',
+        textResultFail:[`${beholder.name}...`,'STAT▼▲'],
+        resultWin:'',
+        textResultWin:[`${beholder.name}...`, `STAT▼▲`],
+    },
+                    */
     const standardRooms =[
         {//ANCHOR ROOM 1 happiness 
             textEnter:`${beholder.name} runs headlong into a wall. They HATE WALLS. Walls mock them.`,
             choices:[
                 {
-                    text:"Eye Ray!",
+                    text:"Eye-ray that wall!",
                     contest:'beholder.eyestalks>=2',
                     resultFail:"console.log('fail'); beholder.happiness+=-1;",
                     textResultFail:[`${beholder.name} shoots the wall with an eye ray! unfortunately they use their petrify beam and freeze the wall in place permanantly. They have to find another way around.`,"Happiness▼"],
@@ -287,7 +313,7 @@ function getRoomsList(){
                     textResultWin:[`${beholder.name} happily continues on their merry way. They don't like mayonaise anyway.`,''],
                 },
                 {
-                    text:"Split it open like an egg, with an EYE RAY!",
+                    text:"Split it open like an egg, with an EYE-RAY!",
                     contest:'beholder.eyestalks > 4',
                     resultFail:"beholder.happiness--;",
                     textResultFail:[`The small sphere breaks open revealing its mayonaise goodness. Unfortunately, ${beholder.name} forgot to negate the sphere's magic while opening it and it explodes in a massive A.O.E. mayonaise ball.`, `HP▼`],
@@ -297,35 +323,72 @@ function getRoomsList(){
             ]
         },
         {//ANCHOR ROOM 3 
-            textEnter:`${beholder.name} does something interesting`,
+            textEnter:`${beholder.name} enters a chamber surrounded by glyphs depicting the number 8. There are no obvious exits`,
             choices:[
                 {
-                    text:"choice 1",
-                    contest:'beholder.sanity>=0',
-                    resultFail:"beholder.HP+=-1;",
-                    textResultFail:[`${beholder.name} grabs the orb without hesitation. Unfortunately it doesn't function in ${beholder.name}'s anti-magic eye and short circuits, zapping them in the mouth.`,'HP▼'],
-                    resultWin:"beholder.HP+=-1;;",
-                    textResultWin:[`${beholder.name} grabs the orb without hesitation. It appears to contain knowledge of mayonaise based magic.`, `Eyestalks▲`],
-        
+                    text:"8. 8. 8. 8. 8. 8. 8. 8...",
+                    contest:'beholder.sanity > 2',
+                    resultFail:"beholder.sanity--; beholder.happiness--;",
+                    textResultFail:[`${beholder.name} takes a long look at the numbers. The word "EIGHT" repeats in their mind. EIGHT. EIGHT. EIGHT. EIGHT. EIIIIIIII... ${beholder.name} awakens in hallway, no memory of how they got there and a searing headache`, `sanity▼, Happiness▼`],
+                    resultWin:"beholder.happiness++; beholder.sanity++;",
+                    textResultWin:[`${beholder.name} studies the glypys and realizes they are purely decorative. They notice a door on the opposite wall, hidden by a folding screen`, `Happiness▲ Sanity▲`],
                 },
                 {
-                    text:"choice 2",
-                    contest:'true',
-                    resultFail:"console.log('error: LINE 215')",
-                    textResultFail:[``, 'ERROR CHECK CONSOLE LOG'],
-                    resultWin:"",
-                    textResultWin:[`${beholder.name} happily continues on their merry way. They don't like mayonaise anyway.`,''],
-                },
-                {
-                    text:"choice 3",
-                    contest:'beholder.eyestalks > 4',
-                    resultFail:"beholder.HP+=-1;;",
-                    textResultFail:[`The small sphere breaks open revealing its mayonaise goodness. Unfortunately, ${beholder.name} forgot to negate the sphere's magic while opening it and it explodes in a massive A.O.E. mayonaise ball.`, `HP▼`],
-                    resultWin:"beholder.HP+=-1;",
-                    textResultWin:[`the small sphere breaks open revealing its mayonaise goodness, and it turns out to be MAGIC MAYONAISE.`,`HP▲ Happiness▲`],
+                    text:"Search the room for loot.",
+                    contest:'beholder.eyestalks>2',
+                    resultFail:'beholder.sanity--; beholder.happiness--',
+                    textResultFail:[`${beholder.name} traces the room in a figure-eight all the while burning a path in the floor to avoid getting lost. Unfortunately the path burns clean through the floor! ${beholder.name} falls their pride is quite hurt.`,'Happiness▼, Sanity▼'],
+                    resultWin:'beholder.sanity++;',
+                    textResultWin:[`One of ${beholder.name}'s eyestalks spies a glistening crystal skull. They pick it up and it speaks great wisdom into their mind: "DON'T TRUST THE EMU." ${beholder.name} decides to keep that in mind`, `sanity▲`],
                 },
             ]
         },
+        {//ANCHOR ROOM 4 DANGER 
+            textEnter:`Upon entering a large chamber filled with toppled pillars and a crumbling ceiling overgrown with vines, ${beholder.name} spies a HUMANOID ADVENTURER!`,
+            choices:[
+                {
+                    text:"EYE-RAYS IN EVERY DIRECTION!",
+                    contest:'beholder.eyestalks>1',
+                    resultFail:'beholder.HP--;',
+                    textResultFail:[`${beholder.name} sends eye-rays in every possible direction. The adventurer, however, is weilding a shield that is polished to a mirror shine, and ${beholder.name}'s disintegrate beam is reflected back. The adventurer flees in an unknown direction!`,'HP▼'],
+                    resultWin:'beholder.eyestalks++; beholder.happiness++',
+                    textResultWin:[`${beholder.name} sends eye-rays in several directions. one strikes an enormous vine on the celing, bewitching it to become ${beholder.name}'s friend! The vine swats the adventurer through the celining and into an unknown other room and ${beholder.name} thanks their new vine friend.'`, `Eyestalks▲, Happiness▲`],
+                },
+                {
+                    text:`Attempt to convince the adventurer you're not a threat`,
+                    contest:'beholder.sanity>2',
+                    resultFail:'beholder.HP--;',
+                    textResultFail:[`${beholder.name} relays a woeful tale of a poor abandoned dream of an eldritch god, made incarnate and left to die, named ${beholder.name}. Unfortunately it seems the adventurer only speaks a regional dialect of Sylvan and can't understand a word. Judging them by appearance, the Adventurer attacks ${beholder.name} with an arrow, then runs off to a different room!`,'HP▼'],
+                    resultWin:'beholder.happiness++;',
+                    textResultWin:[`${beholder.name} chats the adventurer into believing they're a cursed figment of the dungeon's imagination, and the only way to restore their true form is to bring back the "Staff of Swords". Fortunately the adventurer seems to be a dingus and believes every word, galavanting off to some unknown branch of the dungeon to die.`, `Happiness▲`],
+                },
+                {
+                    text:"Spook the adventurer with a grand illusion!",
+                    contest:'beholder.eyestalks>0',
+                    resultFail:'beholder.HP--;',
+                    textResultFail:[`${beholder.name} Creates the image of a grand red dragon, complete with gnashing drooling teeth, spiny tail, shiny crimson scales and the smell of sulfur. Unfortunately it has a dinky smile on its face, and the adventurer looks a little too closely at it. Realizing the illusion, the adventurer sends an arrow at ${beholder.name}`,'HP▼'],
+                    resultWin:'beholder.eyestalks++;',
+                    textResultWin:[`${beholder.name} invokes an image in the adventurer's mind of a pile of shimmering treasure cascading from the ceiling. The adventurer dives aside and cowers to avoid the cascade of illusory treasure as ${beholder.name} floats by undetected.`, `Eyestalks▲`],
+                },
+                {
+                    text:"Reward the adventurer for their bravery",
+                    contest:'beholder.happiness>2',
+                    resultFail:'beholder.HP--; beholder.happiness--;',
+                    textResultFail:[`${beholder.name} emerges to grant a reward upon the brave adventurer, but winds up floating up too high while giving a speech praising the adventurer's fashion choices. ${beholder.name} bonks their head on a stalactite and flees the room out of embarrassment.`,'HP▼ Happiness▼'],
+                    resultWin:'beholder.happiness++; beholder.eyestalks++',
+                    textResultWin:[`${beholder.name} emerges to grant a reward upon the brave adventurer, launching a "good" eye-ray at them. The adventurer crumples into a friendly bony mass of goo!`, `Happiness▲, Eyestalks▲`],
+                },
+            ]
+        },
+    ]
+    const insaneRooms=[
+
+    ]
+    const deathtrapRooms=[
+
+    ]
+    const bossRooms =[
+
     ]
     return(standardRooms);
 }
