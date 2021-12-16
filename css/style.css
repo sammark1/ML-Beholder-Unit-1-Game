@@ -25,6 +25,7 @@ body{
 }
 #popover{
     position:absolute;
+    color: var(--secondary2-light-color);
     background-color: var(--primary-dark-color);
     max-width: 24em;
     min-width: 24em;
@@ -33,7 +34,12 @@ body{
     top:calc(35vh - 12em);
     border-radius: 12px;
     padding:2em;
-    text-align: center;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+}
+#popover > *{
+    margin-bottom: 16px;
 }
 #page{
     background-color: var(--primary-darkest-color);
@@ -128,3 +134,10 @@ button:hover {
     background-color: var(--secondary1-light-color); /* Green */
     color: var(--secondary1-lighest-color);
   }
+input{
+    background-color: var(--primary-darkest-color);
+    color: var(--primary-lightest-color);
+    font-family: 'Modern Antiqua', cursive;
+    font-size: 14pt;
+    border: var(--secondary2-dark-color) 2px inset;
+}

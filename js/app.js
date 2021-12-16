@@ -3,15 +3,15 @@
 //=========================================================
 //ANCHOR JS variables
 let beholder ={
-    name:"Hpaj'litz",
+    name:"",
     pronoun:{},
     maxHP:6,
     maxSanity:5,
     minSanity:-5,
     maxHappiness:5,
-    HP:1,
-    eyestalks:5,
-    sanity:3,
+    HP:6,
+    eyestalks:0,
+    sanity:0,
     happiness:2,
 };
 let currentRoom = 0;
@@ -31,9 +31,9 @@ const hpIcons =[
 //ANCHOR JQuery declarations
 const $popover =$('#popover');
 const $popEls={
-    input:$('#poInput'),
     header:$('#poHeader'),
     content:$('#poContent'),
+    input:$('#poInput'),
     button:$('#poConfirm'),
 }
 const $displayBhName =$('.beholderName');
@@ -105,10 +105,27 @@ function addChoice(choicesIndex,text){
 //=========================================================
 //ANCHOR new game
 function newGame(){
+    clearAll();
     console.log('newGame');
+    $popover.show();
+    $popEls.header.show();
+    $popEls.header.text('My Little Beholder');
+    $popEls.content.show();
+    $popEls.content.text('Name your new friend!');
+    $popEls.input.show();
+    $popEls.button.show();
+    $popEls.button.text("Send 'em into the dungeon!");
+    $popEls.button.on('click',function(){
+        beholder.name=$popEls.input.val();
+        clearAll();
+        updateStatDisp();
+        getRoom();
+    });
+
 }
 //ANCHOR get appropriate room
 function getRoom(){
+    $popover.hide();
     assembleRoom(standardRooms[randomNum(0,standardRooms.length)])
 }
 //ANCHOR assemble room
@@ -159,8 +176,8 @@ function choiceResults(){
     if(beholder.HP>beholder.maxHP){console.log("HP: ",beholder.HP); beholder.HP=beholder.maxHP;}
     console.log(beholder.HP);
     //lose conditional
-    if(beholder.HP<=0){gameOver(); return;}
     updateStatDisp();
+    if(beholder.HP<=0){gameOver(); return;}
     addChoice(0,"Continue");
     $choices.children('button').on('click',nextRoom)
 }
@@ -181,7 +198,8 @@ function gameOver(){
     $popover.show();
     $popEls.input.hide();
     $popEls.header.text("GAME OVER")
-    $popEls.content.hide();
+    $popEls.content.text(`${beholder.name} has lost all their HP!`);
+    $popEls.button.text('New Game?')
     $popEls.button.on('click',newGame);
 }
 //!SECTION
@@ -273,10 +291,8 @@ const standardRooms =[
     },
 ]
 //testing
-$popover.hide();
-clearAll();
+newGame();
 //assembleRoom(standardRooms[2]);
-getRoom();
 //("#happiness").children().text(happinessIcons[5]);
 
 //!SECTION
