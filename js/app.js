@@ -32,8 +32,9 @@ const hpIcons =[
 const $popover =$('#popover');
 const $popEls={
     input:$('#poInput'),
+    header:$('#poHeader'),
     content:$('#poContent'),
-    confirm:$('#poConfirm'),
+    button:$('#poConfirm'),
 }
 const $displayBhName =$('.beholderName');
 const $displayText = $('#displayText');
@@ -102,6 +103,10 @@ function addChoice(choicesIndex,text){
 //=========================================================
 //SECTION 4: Gameflow functions
 //=========================================================
+//ANCHOR new game
+function newGame(){
+    console.log('newGame');
+}
 //ANCHOR get appropriate room
 function getRoom(){
     assembleRoom(standardRooms[randomNum(0,standardRooms.length)])
@@ -172,9 +177,12 @@ function nextRoom(){
 //=========================================================
 //ANCHOR HP ZERO
 function gameOver(){
-    clearAll();
     updateStatDisp();
-    console.log("GAME OVER");
+    $popover.show();
+    $popEls.input.hide();
+    $popEls.header.text("GAME OVER")
+    $popEls.content.hide();
+    $popEls.button.on('click',newGame);
 }
 //!SECTION
 //=========================================================
@@ -265,6 +273,7 @@ const standardRooms =[
     },
 ]
 //testing
+$popover.hide();
 clearAll();
 //assembleRoom(standardRooms[2]);
 getRoom();

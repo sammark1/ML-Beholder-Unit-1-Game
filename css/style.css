@@ -26,10 +26,11 @@ body{
 #popover{
     position:absolute;
     background-color: var(--primary-dark-color);
-    max-width: 50%;
+    max-width: 24em;
+    min-width: 24em;
+    left: 25%;
     max-height: 24em;
     top:calc(35vh - 12em);
-    margin: 0 25% 0 25%;
     border-radius: 12px;
     padding:2em;
     text-align: center;
