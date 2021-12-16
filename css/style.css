@@ -19,7 +19,7 @@
 
 body{
     background-color: var(--primary-darkest-color);
-    color:white;
+    color:var(--secondary2-light-color);
     font-family: 'Modern Antiqua', cursive;
     font-size: 14pt;
 }
@@ -36,10 +36,13 @@ body{
     padding:2em;
     display:flex;
     flex-direction: column;
+    text-align: left;
     align-items:center;
 }
 #popover > *{
     margin-bottom: 16px;
+    margin-left: 16px;
+    margin-right: 16px;
 }
 #page{
     background-color: var(--primary-darkest-color);
@@ -140,4 +143,8 @@ input{
     font-family: 'Modern Antiqua', cursive;
     font-size: 14pt;
     border: var(--secondary2-dark-color) 2px inset;
+}
+p{
+    color:var(--secondary2-light-color);
+    margin-bottom: 1em;
 }
