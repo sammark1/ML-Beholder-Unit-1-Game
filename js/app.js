@@ -1,7 +1,12 @@
+/*TODO
+--add more rooms
+--shuffle standard rooms array then run down the list
+--add boss rooms
+*/
 //=========================================================
 //SECTION 1:Global Delcarations
 //=========================================================
-//ANCHOR JS variables
+//ANCHOR JS variable stats
 let beholder ={
     name:"",
     pronoun:{},
@@ -116,6 +121,7 @@ function newGame(){
     $popEls.button.show();
     $popEls.button.text("Send 'em into the dungeon!");
     $popEls.button.on('click',function(){
+        resetAll();
         beholder.name=$popEls.input.val();
         clearAll();
         updateStatDisp();
@@ -123,10 +129,20 @@ function newGame(){
     });
 
 }
+//ANCHOR reset all stats
+function resetAll(){
+    beholder.name="";
+    beholder.HP=6;
+    beholder.eyestalks=0;
+    beholder.sanity=0;
+    beholder.happiness=2;
+    currentRoom=0;
+
+}
 //ANCHOR get appropriate room
 function getRoom(){
     $popover.hide();
-    assembleRoom(standardRooms[randomNum(0,standardRooms.length)])
+    assembleRoom(getRoomsList()[randomNum(0,getRoomsList().length)])
 }
 //ANCHOR assemble room
 function assembleRoom(roomObj){
@@ -184,7 +200,6 @@ function choiceResults(){
 //ANCHOR wrapping choice and continuing to next room
 function nextRoom(){
     clearAll();
-    console.log("you clicked continue");
     getRoom();
 }
 
@@ -206,90 +221,93 @@ function gameOver(){
 //=========================================================
 //SECTION 6: Global Gameflow Object Declarations
 //=========================================================
-const standardRooms =[
-    {//ANCHOR ROOM 1 happiness 
-        textEnter:`${beholder.name} runs headlong into a wall. They HATE WALLS. Walls mock them.`,
-        choices:[
-            {
-                text:"Eye Ray!",
-                contest:'beholder.eyestalks>=2',
-                resultFail:"console.log('fail'); beholder.happiness+=-1;",
-                textResultFail:[`${beholder.name} shoots the wall with an eye ray! unfortunately they use their petrify beam and freeze the wall in place permanantly. They have to find another way around.`,"Happiness▼"],
-                resultWin:"console.log('win'); beholder.happiness++; beholder.eyestalks++;",
-                textResultWin:[`${beholder.name} shoots the wall with an eye ray! It disintegrates right before their gleeful face.`,'Happiness▲, Eyestalks▲'],
-    
-            },
-            {
-                text:"Politely ask the wall to move",
-                contest:'beholder.sanity<=2',
-                resultFail:"beholder.happiness--;",
-                textResultFail:[`${beholder.name} politely asks the wall to move. The wall stands still. What a silly thing to do.`, 'Happiness▼'],
-                resultWin:"beholder.happiness++; beholder.sanity--;",
-                textResultWin:[`${beholder.name} politely asks the wall to move. The wall takes a sweeping bow and shifts aside. ${beholder.name} is very pleased with themself.`,'Happiness▲, sanity▼'],
-            },
-        ]
-    },
-    {//ANCHOR ROOM 2 HP danger with avoid path option
-        textEnter:`${beholder.name} find the skeleton of an old wizard. The spooky skeleton has a long gray beard and is clutching a glowing orb with something that looks like mayonaise inside.`,
-        choices:[
-            {
-                text:"GRAB THAT MAYO ORB!",
-                contest:'beholder.sanity>=0',
-                resultFail:"beholder.HP+=-1;",
-                textResultFail:[`${beholder.name} grabs the orb without hesitation. Unfortunately it doesn't function in ${beholder.name}'s anti-magic eye and short circuits, zapping them in the mouth.`,'HP▼'],
-                resultWin:"beholder.eyestalks++;",
-                textResultWin:[`${beholder.name} grabs the orb without hesitation. It appears to contain knowledge of mayonaise based magic.`, `Eyestalks▲`],
-    
-            },
-            {
-                text:"This is clearly a wizard trap. Wizards are always trapping orbs.",
-                contest:'true',
-                resultFail:"console.log('error: LINE 215')",
-                textResultFail:[``, 'ERROR CHECK CONSOLE LOG'],
-                resultWin:"",
-                textResultWin:[`${beholder.name} happily continues on their merry way. They don't like mayonaise anyway.`,''],
-            },
-            {
-                text:"Split it open like an egg, with an EYE RAY!",
-                contest:'beholder.eyestalks > 4',
-                resultFail:"beholder.happiness--;",
-                textResultFail:[`The small sphere breaks open revealing its mayonaise goodness. Unfortunately, ${beholder.name} forgot to negate the sphere's magic while opening it and it explodes in a massive A.O.E. mayonaise ball.`, `HP▼`],
-                resultWin:"beholder.happiness++; beholder.HP++;",
-                textResultWin:[`the small sphere breaks open revealing its mayonaise goodness, and it turns out to be MAGIC MAYONAISE.`,`HP▲ Happiness▲`],
-            },
-        ]
-    },
-    {//ANCHOR ROOM 3 
-        textEnter:`${beholder.name} does something interesting`,
-        choices:[
-            {
-                text:"choice 1",
-                contest:'beholder.sanity>=0',
-                resultFail:"beholder.HP+=-1;",
-                textResultFail:[`${beholder.name} grabs the orb without hesitation. Unfortunately it doesn't function in ${beholder.name}'s anti-magic eye and short circuits, zapping them in the mouth.`,'HP▼'],
-                resultWin:"beholder.HP+=-1;;",
-                textResultWin:[`${beholder.name} grabs the orb without hesitation. It appears to contain knowledge of mayonaise based magic.`, `Eyestalks▲`],
-    
-            },
-            {
-                text:"choice 2",
-                contest:'true',
-                resultFail:"console.log('error: LINE 215')",
-                textResultFail:[``, 'ERROR CHECK CONSOLE LOG'],
-                resultWin:"",
-                textResultWin:[`${beholder.name} happily continues on their merry way. They don't like mayonaise anyway.`,''],
-            },
-            {
-                text:"choice 3",
-                contest:'beholder.eyestalks > 4',
-                resultFail:"beholder.HP+=-1;;",
-                textResultFail:[`The small sphere breaks open revealing its mayonaise goodness. Unfortunately, ${beholder.name} forgot to negate the sphere's magic while opening it and it explodes in a massive A.O.E. mayonaise ball.`, `HP▼`],
-                resultWin:"beholder.HP+=-1;",
-                textResultWin:[`the small sphere breaks open revealing its mayonaise goodness, and it turns out to be MAGIC MAYONAISE.`,`HP▲ Happiness▲`],
-            },
-        ]
-    },
-]
+function getRoomsList(){
+    const standardRooms =[
+        {//ANCHOR ROOM 1 happiness 
+            textEnter:`${beholder.name} runs headlong into a wall. They HATE WALLS. Walls mock them.`,
+            choices:[
+                {
+                    text:"Eye Ray!",
+                    contest:'beholder.eyestalks>=2',
+                    resultFail:"console.log('fail'); beholder.happiness+=-1;",
+                    textResultFail:[`${beholder.name} shoots the wall with an eye ray! unfortunately they use their petrify beam and freeze the wall in place permanantly. They have to find another way around.`,"Happiness▼"],
+                    resultWin:"console.log('win'); beholder.happiness++; beholder.eyestalks++;",
+                    textResultWin:[`${beholder.name} shoots the wall with an eye ray! It disintegrates right before their gleeful face.`,'Happiness▲, Eyestalks▲'],
+        
+                },
+                {
+                    text:"Politely ask the wall to move",
+                    contest:'beholder.sanity<=2',
+                    resultFail:"beholder.happiness--;",
+                    textResultFail:[`${beholder.name} politely asks the wall to move. The wall stands still. What a silly thing to do.`, 'Happiness▼'],
+                    resultWin:"beholder.happiness++; beholder.sanity--;",
+                    textResultWin:[`${beholder.name} politely asks the wall to move. The wall takes a sweeping bow and shifts aside. ${beholder.name} is very pleased with themself.`,'Happiness▲, sanity▼'],
+                },
+            ]
+        },
+        {//ANCHOR ROOM 2 HP danger with avoid path option
+            textEnter:`${beholder.name} find the skeleton of an old wizard. The spooky skeleton has a long gray beard and is clutching a glowing orb with something that looks like mayonaise inside.`,
+            choices:[
+                {
+                    text:"GRAB THAT MAYO ORB!",
+                    contest:'beholder.sanity>=0',
+                    resultFail:"beholder.HP+=-1;",
+                    textResultFail:[`${beholder.name} grabs the orb without hesitation. Unfortunately it doesn't function in ${beholder.name}'s anti-magic eye and short circuits, zapping them in the mouth.`,'HP▼'],
+                    resultWin:"beholder.eyestalks++;",
+                    textResultWin:[`${beholder.name} grabs the orb without hesitation. It appears to contain knowledge of mayonaise based magic.`, `Eyestalks▲`],
+        
+                },
+                {
+                    text:"This is clearly a wizard trap. Wizards are always trapping orbs.",
+                    contest:'true',
+                    resultFail:"console.log('error: LINE 215')",
+                    textResultFail:[``, 'ERROR CHECK CONSOLE LOG'],
+                    resultWin:"",
+                    textResultWin:[`${beholder.name} happily continues on their merry way. They don't like mayonaise anyway.`,''],
+                },
+                {
+                    text:"Split it open like an egg, with an EYE RAY!",
+                    contest:'beholder.eyestalks > 4',
+                    resultFail:"beholder.happiness--;",
+                    textResultFail:[`The small sphere breaks open revealing its mayonaise goodness. Unfortunately, ${beholder.name} forgot to negate the sphere's magic while opening it and it explodes in a massive A.O.E. mayonaise ball.`, `HP▼`],
+                    resultWin:"beholder.happiness++; beholder.HP++;",
+                    textResultWin:[`the small sphere breaks open revealing its mayonaise goodness, and it turns out to be MAGIC MAYONAISE.`,`HP▲ Happiness▲`],
+                },
+            ]
+        },
+        {//ANCHOR ROOM 3 
+            textEnter:`${beholder.name} does something interesting`,
+            choices:[
+                {
+                    text:"choice 1",
+                    contest:'beholder.sanity>=0',
+                    resultFail:"beholder.HP+=-1;",
+                    textResultFail:[`${beholder.name} grabs the orb without hesitation. Unfortunately it doesn't function in ${beholder.name}'s anti-magic eye and short circuits, zapping them in the mouth.`,'HP▼'],
+                    resultWin:"beholder.HP+=-1;;",
+                    textResultWin:[`${beholder.name} grabs the orb without hesitation. It appears to contain knowledge of mayonaise based magic.`, `Eyestalks▲`],
+        
+                },
+                {
+                    text:"choice 2",
+                    contest:'true',
+                    resultFail:"console.log('error: LINE 215')",
+                    textResultFail:[``, 'ERROR CHECK CONSOLE LOG'],
+                    resultWin:"",
+                    textResultWin:[`${beholder.name} happily continues on their merry way. They don't like mayonaise anyway.`,''],
+                },
+                {
+                    text:"choice 3",
+                    contest:'beholder.eyestalks > 4',
+                    resultFail:"beholder.HP+=-1;;",
+                    textResultFail:[`The small sphere breaks open revealing its mayonaise goodness. Unfortunately, ${beholder.name} forgot to negate the sphere's magic while opening it and it explodes in a massive A.O.E. mayonaise ball.`, `HP▼`],
+                    resultWin:"beholder.HP+=-1;",
+                    textResultWin:[`the small sphere breaks open revealing its mayonaise goodness, and it turns out to be MAGIC MAYONAISE.`,`HP▲ Happiness▲`],
+                },
+            ]
+        },
+    ]
+    return(standardRooms);
+}
 //testing
 newGame();
 //assembleRoom(standardRooms[2]);
