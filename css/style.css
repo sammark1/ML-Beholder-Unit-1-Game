@@ -23,6 +23,17 @@ body{
     font-family: 'Modern Antiqua', cursive;
     font-size: 14pt;
 }
+#popover{
+    position:absolute;
+    background-color: var(--primary-dark-color);
+    max-width: 50%;
+    max-height: 24em;
+    top:calc(35vh - 12em);
+    margin: 0 25% 0 25%;
+    border-radius: 12px;
+    padding:2em;
+    text-align: center;
+}
 #page{
     background-color: var(--primary-darkest-color);
     margin: auto;
@@ -101,7 +112,7 @@ p{
     row-gap: 10px;
     column-gap: 20px;
 }
-#choices>*{
+button{
     font-family: 'Modern Antiqua', cursive;;
     font-size: 12pt;
     color: var(--secondary2-light-color);
@@ -111,7 +122,8 @@ p{
     height: 3em;
     max-width: 50%;
     flex-grow: 1;
-}#choices>*:hover {
+}
+button:hover {
     background-color: var(--secondary1-light-color); /* Green */
     color: var(--secondary1-lighest-color);
   }

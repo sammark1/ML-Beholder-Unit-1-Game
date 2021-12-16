@@ -29,6 +29,12 @@ const hpIcons =[
     'favorite_border',
 ]
 //ANCHOR JQuery declarations
+const $popover =$('#popover');
+const $popEls={
+    input:$('#poInput'),
+    content:$('#poContent'),
+    confirm:$('#poConfirm'),
+}
 const $displayBhName =$('.beholderName');
 const $displayText = $('#displayText');
 const $choices = $('#choices');
@@ -147,6 +153,7 @@ function choiceResults(){
     }
     if(beholder.HP>beholder.maxHP){console.log("HP: ",beholder.HP); beholder.HP=beholder.maxHP;}
     console.log(beholder.HP);
+    //lose conditional
     if(beholder.HP<=0){gameOver(); return;}
     updateStatDisp();
     addChoice(0,"Continue");
