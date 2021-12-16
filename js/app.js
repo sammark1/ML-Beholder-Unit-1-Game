@@ -5,16 +5,16 @@
 let beholder ={
     name:"Hpaj'litz",
     pronoun:{},
-    maxHP:10,
+    maxHP:6,
     maxSanity:5,
     minSanity:-5,
     maxHappiness:5,
-    HP:6,
-    eyestalks:0,
+    HP:1,
+    eyestalks:5,
     sanity:3,
-    happiness:0,
+    happiness:2,
 };
-let currentRoom = 5;
+let currentRoom = 0;
 //ANCHOR Referential objects and arrays
 const happinessIcons=[
     'mood_bad',
@@ -42,7 +42,15 @@ const $displays = {
 
 //!SECTION
 //=========================================================
-//SECTION 2:Display control functions
+//SECTION 2:Utility functions
+//=========================================================
+//ANCHOR random number
+function randomNum(rangeStart,rangeEnd){
+    return(Math.floor(Math.random()*rangeEnd)+rangeStart);
+}
+//!SECTION
+//=========================================================
+//SECTION 3:Display control functions
 //=========================================================
 //ANCHOR clear all
 function clearAll(){
@@ -50,7 +58,6 @@ function clearAll(){
     $displayText.text('');
 }
 //ANCHOR update status displays
-//NOTE DO THIS FUNCTION NEXT PLZ.
 function updateStatDisp(){
     $displayBhName.text(beholder.name);
     $displays.disRoomNum.text(currentRoom);
@@ -87,13 +94,15 @@ function addChoice(choicesIndex,text){
 
 //!SECTION
 //=========================================================
-//SECTION 3: Gameflow functions
+//SECTION 4: Gameflow functions
 //=========================================================
-
+//ANCHOR get appropriate room
+function getRoom(){
+    assembleRoom(standardRooms[randomNum(0,standardRooms.length)])
+}
 //ANCHOR assemble room
 function assembleRoom(roomObj){
     updateStatDisp();
-    //REVIEW get a random room from a list excluding previous explored rooms
     getDisplayText(roomObj.textEnter);
     //create buttons loop
     for(i=0;i<roomObj.choices.length;i++){
@@ -123,8 +132,7 @@ function userChoice(roomObj,choiceIndex){
 //ANCHOR logic resulting from the choice
 function choiceResults(){
     //resolve stat ranges and conditions
-    if(beholder.HP>beholder.maxHP){beholder.HP=beholder.maxHP}
-    else if(beholder.HP<0){console.log("lose condition function")}
+    console.log("marker")
     if(beholder.eyestalks<0){beholder.eyestalks=0}
     if(beholder.sanity>beholder.maxSanity){beholder.sanity=beholder.maxSanity}
     else if(beholder.sanity<beholder.minSanity){beholder.sanity=beholder.minSanity}
@@ -137,50 +145,123 @@ function choiceResults(){
             beholder.HP--;
         }
     }
+    if(beholder.HP>beholder.maxHP){console.log("HP: ",beholder.HP); beholder.HP=beholder.maxHP;}
+    console.log(beholder.HP);
+    if(beholder.HP<=0){gameOver(); return;}
     updateStatDisp();
     addChoice(0,"Continue");
-    $choices.children('button').on('click',doThing)
+    $choices.children('button').on('click',nextRoom)
 }
-function doThing(){
+//ANCHOR wrapping choice and continuing to next room
+function nextRoom(){
+    clearAll();
     console.log("you clicked continue");
+    getRoom();
 }
-
 
 //!SECTION
 //=========================================================
-//SECTION 4: Global Gameflow Object Declarations
+//SECTION 5: Win/Lose functions
 //=========================================================
-const exampleRoom = {
-    textEnter:`${beholder.name} runs headlong into a wall. They HATE WALLS. Walls mock them.`,
-    choices:[
-        {
-            text:"Eye Ray!",
-            contest:'beholder.eyestalks>=2',
-            resultFail:"console.log('fail'); beholder.happiness+=-1;",
-            textResultFail:[`${beholder.name} shoots the wall with an eye ray! unfortunately they use their petrify beam and freeze the wall in place permanantly. They have to find another way around.`,"Happiness▼"],
-            resultWin:"console.log('win'); beholder.happiness++; beholder.eyestalks++;",
-            textResultWin:`${beholder.name} shoots the wall with an eye ray! It disintegrates right before their gleeful face. Happiness▲, eyestalks▲`,
-
-        },
-        {
-            text:"Politely ask the wall to move",
-            contest:'beholder.sanity<=2',
-            resultFail:"beholder.happiness--;",
-            textResultFail:`${beholder.name} politely asks the wall to move. The wall stands still. What a silly thing to do. Happiness▼`,
-            resultWin:"beholder.happiness++; beholder.sanity--;",
-            textResultWin:`${beholder.name} politely asks the wall to move. The wall takes a sweeping bow and shifts aside. ${beholder.name} is very pleased with themself. Happiness▲, sanity▼`,
-        },
-    ]
+//ANCHOR HP ZERO
+function gameOver(){
+    clearAll();
+    updateStatDisp();
+    console.log("GAME OVER");
 }
+//!SECTION
+//=========================================================
+//SECTION 6: Global Gameflow Object Declarations
+//=========================================================
+const standardRooms =[
+    {//ANCHOR ROOM 1 happiness 
+        textEnter:`${beholder.name} runs headlong into a wall. They HATE WALLS. Walls mock them.`,
+        choices:[
+            {
+                text:"Eye Ray!",
+                contest:'beholder.eyestalks>=2',
+                resultFail:"console.log('fail'); beholder.happiness+=-1;",
+                textResultFail:[`${beholder.name} shoots the wall with an eye ray! unfortunately they use their petrify beam and freeze the wall in place permanantly. They have to find another way around.`,"Happiness▼"],
+                resultWin:"console.log('win'); beholder.happiness++; beholder.eyestalks++;",
+                textResultWin:[`${beholder.name} shoots the wall with an eye ray! It disintegrates right before their gleeful face.`,'Happiness▲, Eyestalks▲'],
+    
+            },
+            {
+                text:"Politely ask the wall to move",
+                contest:'beholder.sanity<=2',
+                resultFail:"beholder.happiness--;",
+                textResultFail:[`${beholder.name} politely asks the wall to move. The wall stands still. What a silly thing to do.`, 'Happiness▼'],
+                resultWin:"beholder.happiness++; beholder.sanity--;",
+                textResultWin:[`${beholder.name} politely asks the wall to move. The wall takes a sweeping bow and shifts aside. ${beholder.name} is very pleased with themself.`,'Happiness▲, sanity▼'],
+            },
+        ]
+    },
+    {//ANCHOR ROOM 2 HP danger with avoid path option
+        textEnter:`${beholder.name} find the skeleton of an old wizard. The spooky skeleton has a long gray beard and is clutching a glowing orb with something that looks like mayonaise inside.`,
+        choices:[
+            {
+                text:"GRAB THAT MAYO ORB!",
+                contest:'beholder.sanity>=0',
+                resultFail:"beholder.HP+=-1;",
+                textResultFail:[`${beholder.name} grabs the orb without hesitation. Unfortunately it doesn't function in ${beholder.name}'s anti-magic eye and short circuits, zapping them in the mouth.`,'HP▼'],
+                resultWin:"beholder.eyestalks++;",
+                textResultWin:[`${beholder.name} grabs the orb without hesitation. It appears to contain knowledge of mayonaise based magic.`, `Eyestalks▲`],
+    
+            },
+            {
+                text:"This is clearly a wizard trap. Wizards are always trapping orbs.",
+                contest:'true',
+                resultFail:"console.log('error: LINE 215')",
+                textResultFail:[``, 'ERROR CHECK CONSOLE LOG'],
+                resultWin:"",
+                textResultWin:[`${beholder.name} happily continues on their merry way. They don't like mayonaise anyway.`,''],
+            },
+            {
+                text:"Split it open like an egg, with an EYE RAY!",
+                contest:'beholder.eyestalks > 4',
+                resultFail:"beholder.happiness--;",
+                textResultFail:[`The small sphere breaks open revealing its mayonaise goodness. Unfortunately, ${beholder.name} forgot to negate the sphere's magic while opening it and it explodes in a massive A.O.E. mayonaise ball.`, `HP▼`],
+                resultWin:"beholder.happiness++; beholder.HP++;",
+                textResultWin:[`the small sphere breaks open revealing its mayonaise goodness, and it turns out to be MAGIC MAYONAISE.`,`HP▲ Happiness▲`],
+            },
+        ]
+    },
+    {//ANCHOR ROOM 3 
+        textEnter:`${beholder.name} does something interesting`,
+        choices:[
+            {
+                text:"choice 1",
+                contest:'beholder.sanity>=0',
+                resultFail:"beholder.HP+=-1;",
+                textResultFail:[`${beholder.name} grabs the orb without hesitation. Unfortunately it doesn't function in ${beholder.name}'s anti-magic eye and short circuits, zapping them in the mouth.`,'HP▼'],
+                resultWin:"beholder.HP+=-1;;",
+                textResultWin:[`${beholder.name} grabs the orb without hesitation. It appears to contain knowledge of mayonaise based magic.`, `Eyestalks▲`],
+    
+            },
+            {
+                text:"choice 2",
+                contest:'true',
+                resultFail:"console.log('error: LINE 215')",
+                textResultFail:[``, 'ERROR CHECK CONSOLE LOG'],
+                resultWin:"",
+                textResultWin:[`${beholder.name} happily continues on their merry way. They don't like mayonaise anyway.`,''],
+            },
+            {
+                text:"choice 3",
+                contest:'beholder.eyestalks > 4',
+                resultFail:"beholder.HP+=-1;;",
+                textResultFail:[`The small sphere breaks open revealing its mayonaise goodness. Unfortunately, ${beholder.name} forgot to negate the sphere's magic while opening it and it explodes in a massive A.O.E. mayonaise ball.`, `HP▼`],
+                resultWin:"beholder.HP+=-1;",
+                textResultWin:[`the small sphere breaks open revealing its mayonaise goodness, and it turns out to be MAGIC MAYONAISE.`,`HP▲ Happiness▲`],
+            },
+        ]
+    },
+]
 //testing
 clearAll();
-assembleRoom(exampleRoom);
+//assembleRoom(standardRooms[2]);
+getRoom();
 //("#happiness").children().text(happinessIcons[5]);
-
-//!SECTION
-//=========================================================
-//SECTION 5: Win/Lose Conditions
-//=========================================================
 
 //!SECTION
 //=========================================================
