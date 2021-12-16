@@ -81,6 +81,13 @@ header{
     max-height: 6em;
     min-height: 6em;
 }
+p{
+    margin:0;
+    color: var(--secondary2-lightest-color);
+}
+#highlight{
+    color:lightcoral;
+}
 #choices{
     background-color: var(--primary-color);
     /*border-top: 3px solid var(--primary-dark-color);*/

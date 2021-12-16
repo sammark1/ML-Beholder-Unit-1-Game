@@ -6,8 +6,8 @@ let beholder ={
     name:"Hpaj'litz",
     pronoun:{},
     maxHP:10,
-    maxEyestalks:10,
-    maxSanity:10,
+    maxSanity:5,
+    minSanity:-5,
     maxHappiness:5,
     HP:6,
     eyestalks:0,
@@ -70,8 +70,12 @@ function updateStatDisp(){
     $displays.disHappiness.text(happinessIcons[beholder.happiness])
 }
 //ANCHOR get displayText
-function getDisplayText(target){
-    $displayText.text(target);
+function getDisplayText(target,appendix){
+    let previous=$displayText.text();
+    $displayText.text(previous+target);
+    if(appendix){
+        $displayText.append($(`<span id=highlight> ${appendix}</span>`));
+    }
 }
 //ANCHOR add choice
 function addChoice(choicesIndex,text){
@@ -102,19 +106,43 @@ function assembleRoom(roomObj){
 }
 //ANCHOR user selection result
 function userChoice(roomObj,choiceIndex){
+    clearAll()
     //console.log("user clicked button ",choiceIndex);
     const choice = roomObj.choices[choiceIndex];
-    console.log(setTimeout(choice.contest,1))
+    //console.log(setTimeout(choice.contest,1))
     if(eval(choice.contest)){
         setTimeout(choice.resultWin,1);
-        getDisplayText(choice.textResultWin);
+        getDisplayText(choice.textResultWin[0],choice.textResultWin[1]);
     }
     else{
         setTimeout(choice.resultFail,1);
-        getDisplayText(choice.textResultFail);
+        getDisplayText(choice.textResultFail[0],choice.textResultFail[1]);
     }
-    //setTimeout(roomObj.choices[choiceIndex].result,1);//stats changed
-    //getDisplayText(roomObj.choices[choiceIndex].textResult);
+    setTimeout('choiceResults()',1);
+}
+//ANCHOR logic resulting from the choice
+function choiceResults(){
+    //resolve stat ranges and conditions
+    if(beholder.HP>beholder.maxHP){beholder.HP=beholder.maxHP}
+    else if(beholder.HP<0){console.log("lose condition function")}
+    if(beholder.eyestalks<0){beholder.eyestalks=0}
+    if(beholder.sanity>beholder.maxSanity){beholder.sanity=beholder.maxSanity}
+    else if(beholder.sanity<beholder.minSanity){beholder.sanity=beholder.minSanity}
+    if(beholder.happiness>beholder.maxHappiness){beholder.happiness=beholder.maxHappiness;}
+    else if(beholder.happiness<0){
+        beholder.happiness=0;
+        if(true/*Math.floor(Math.random()*2)*/){
+            const $subDisplayText =$(`<p>${beholder.name} is feeling rather down in the dumps. <span id="highlight">HP▼</span></p>`);
+            $displayText.append($subDisplayText);
+            beholder.HP--;
+        }
+    }
+    updateStatDisp();
+    addChoice(0,"Continue");
+    $choices.children('button').on('click',doThing)
+}
+function doThing(){
+    console.log("you clicked continue");
 }
 
 
@@ -128,18 +156,18 @@ const exampleRoom = {
         {
             text:"Eye Ray!",
             contest:'beholder.eyestalks>=2',
-            resultFail:"console.log('choice 1 failed');",
-            textResultFail:`${beholder.name} shoots the wall with an eye ray! unfortunately they use their petrify beam and freeze the wall in place permanantly. They have to find another way around. Happiness▼`,
-            resultWin:"console.log('choice 1 win!');",
+            resultFail:"console.log('fail'); beholder.happiness+=-1;",
+            textResultFail:[`${beholder.name} shoots the wall with an eye ray! unfortunately they use their petrify beam and freeze the wall in place permanantly. They have to find another way around.`,"Happiness▼"],
+            resultWin:"console.log('win'); beholder.happiness++; beholder.eyestalks++;",
             textResultWin:`${beholder.name} shoots the wall with an eye ray! It disintegrates right before their gleeful face. Happiness▲, eyestalks▲`,
 
         },
         {
             text:"Politely ask the wall to move",
             contest:'beholder.sanity<=2',
-            resultFail:"console.log('choice 1 failed');",
+            resultFail:"beholder.happiness--;",
             textResultFail:`${beholder.name} politely asks the wall to move. The wall stands still. What a silly thing to do. Happiness▼`,
-            resultWin:"console.log('choice 1 win!');",
+            resultWin:"beholder.happiness++; beholder.sanity--;",
             textResultWin:`${beholder.name} politely asks the wall to move. The wall takes a sweeping bow and shifts aside. ${beholder.name} is very pleased with themself. Happiness▲, sanity▼`,
         },
     ]
@@ -159,13 +187,11 @@ assembleRoom(exampleRoom);
 //SECTION X:Secret Function
 //=========================================================
 function secret(e){
-    console.log(e.code)
     if(e.code !== "KeyB"){
         $('#style')[0].href="css/style.css"
         return;
     }
     $('#style')[0].href="css/trueStyle.css"
-    console.log($('#style')[0].href);
 }
 document.addEventListener('keypress', secret);
 
