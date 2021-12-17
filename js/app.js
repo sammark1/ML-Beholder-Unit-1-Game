@@ -1,5 +1,5 @@
 /*TODO
---add boss rooms
+--finish boss rooms
 --add/fix results for bottomed stats
 --shuffle standard rooms array then run down the list
 --add more rooms
@@ -53,9 +53,9 @@ const hpIcons =[
     'favorite_border',
 ]
 const bossWords={
-    adj:['Undying', 'cataclysmic'],
-    noun:['Basalisk','Black Dragon','Tarrasque','Greg'],
-    suffix:['of Doom', 'from the 9 Hells'],
+    adj:['Undying', 'Cataclysmic','Ultimate','Infinite','Demonic','Ironclad'],
+    noun:['Basalisk','Black Dragon','Tarrasque','Greg','Horse','Toe','Pig','T-Rex','Troll','Giant','Aboleth'],
+    suffix:['of Doom', 'from the nine Hells','Filled With Razorblades'],
 }
 let boss ="";
 //ANCHOR JQuery declarations
@@ -201,7 +201,7 @@ function getRoom(){
         assembleRoom(getRoomsList('standardRooms')[randomNum(0,getRoomsList('standardRooms').length)])
     }
     //NOTE CHEAT OVERRIDE ON WHICH ROOM TO VIEW
-    // assembleRoom(getRoomsList()[4])
+    //assembleRoom(getRoomsList('bossRooms')[1])
 }
 //ANCHOR assemble room
 function assembleRoom(roomObj){
@@ -476,7 +476,7 @@ function getRoomsList(list, index){
     ]
     const bossRooms =[
         {//ANCHOR boss room 0: anticipation
-            textEnter:`${beholder.name} finds themself staring down a long corridor, at the end of which stands a looming <span id="highlight">BOSS DOOR</span>`,
+            textEnter:`${beholder.name} finds themself staring down a long corridor, at the end of which stands a looming <span id="highlight">BOSS DOOR!</span> Warning this will be <span id="highlight">very dangerous</span>`,
             choices:[
                 {
                     text:"Open the door and Continue",
@@ -492,46 +492,46 @@ function getRoomsList(list, index){
                     contest:'true',
                     resultFail:"",
                     textResultFail:['',''],
-                    resultWin:"",//FIXME
+                    resultWin:'currentRoom-=4',//Option to escape the boss sequence if your stuff is too low
                     textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
                 },
             ]
         },
         {//ANCHOR boss room 1: DANGER: Engage the Boss!
-            textEnter:`${beholder.name} cautiously enteres the enormous circular chamber, eyestalks at the ready. Suddenly, Dropping from the ceiling is an enormous ${boss} which promptly roars with fury at ${beholder.name}`,
+            textEnter:`${beholder.name} cautiously enteres an enormous circular chamber, eyestalks at the ready. Suddenly, Dropping from the ceiling is an enormous <span id="highlight">${boss}</span> which promptly roars with fury at ${beholder.name}`,
             choices:[
                 {
                     text:"Sling those eye-rays",
-                    contest:'true',
-                    resultFail:"",
-                    textResultFail:['',''],
-                    resultWin:"",
-                    textResultWin:[`${beholder.name} slowly opens the door...`],
+                    contest:'beholder.eyestalks>3',
+                    resultFail:"console.log('notSet')",
+                    textResultFail:[`${beholder.name} slings dozens of eye-rays at the ${boss} landing a few devastating hits, but in the proccess, ${beholder.name} is hit by a stray rebounded enervation ray!`,'HP▼, Eyestalks▼'],
+                    resultWin:"console.log('notSet')",
+                    textResultWin:[`${beholder.name} slings a strong telekenetic ray at the ${boss}, blasting it back into a wall of spikes!`,'Eyestalks▲▲'],
         
                 },
                 {
-                    text:"Use your beholderly gile and charm",
-                    contest:'true',
-                    resultFail:"",
-                    textResultFail:['',''],
-                    resultWin:"",
-                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
+                    text:"Use your cheery beholderly gile and charm",
+                    contest:'beholder.happiness>1',
+                    resultFail:"beholder.HP--; beholder.sanity--; beholder.happiness--;",
+                    textResultFail:[`${beholder.name} glides forward, raising their eyestalks ready to sing a glorious balad for the ${boss}. Before they can get past the first measure, the boss roars in displeasure causing a ceiling tile to strike ${beholder.name} in the noggin!`,'HP▼ Sanity▼ Happiness▼'],
+                    resultWin:"beholder.sanity+=2; beholder.happiness++;",
+                    textResultWin:[`${beholder.name} blinks their enormous sultry eye at the ${boss}, negating its magic and rendering its initial attacks ineffective`,'Sanity▲▲ Happiness▲'],
                 },
                 {
                     text:`Point out the ${boss} is not wearing clothes`,
-                    contest:'true',
-                    resultFail:"",
-                    textResultFail:['',''],
-                    resultWin:"",
-                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
+                    contest:'beholder.sanity<-1',
+                    resultFail:"beholder.HP--; beholder.happiness--;",
+                    textResultFail:[`${beholder.name} glides forward loudly cackling at the ${boss}'s appearance. The boss is very body positive, and unleashes a punishing fireball!`,'HP▼, Happiness▼'],
+                    resultWin:"beholder.sanity--; beholder.happiness+=2;",
+                    textResultWin:[`${beholder.name} glides forward, loudly cackling at the fact that the ${boss} is not wearing clothes. The boss feels immense shame and takes psychic damage!`,'Sanity▼, Happiness▲▲'],
                 },
                 {
                     text:`Watch the ${boss} and learn its weaknesses`,
-                    contest:'true',
-                    resultFail:"",
-                    textResultFail:['',''],
-                    resultWin:"",
-                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
+                    contest:'beholder.sanity>1',
+                    resultFail:"beholder.HP--; beholder.sanity--; beholder.happiness--;",
+                    textResultFail:[`${beholder.name} watches the ${boss}'s moves carefully. Unfortunately the boss's moves are quite hypnotic and ${beholder.name} doesn't realize they are about to step on a dangerous glyph!`,'HP▼ Sanity▼ Happiness▼'],
+                    resultWin:"beholder.happiness++; beholder.sanity+=2;",
+                    textResultWin:[`${beholder.name} keeps their distance and studies the ${boss}'s movements. They notice the boss telegraphs its moves!`,'Happiness▲ sanity▲▲'],
                 },
             ]
         },
@@ -539,37 +539,37 @@ function getRoomsList(list, index){
             textEnter:`The ${boss} lets out an enormous roaring blast attack! It tears the floor to rubble and blasts the ceiling open as it travels straingt for ${beholder.name}`,
             choices:[
                 {
-                    text:"OH SH...ield!",
-                    contest:'true',
-                    resultFail:"",
-                    textResultFail:['',''],
-                    resultWin:"",
-                    textResultWin:[`${beholder.name} slowly opens the door...`],
+                    text:"Believe in yourself and- OH SHIeld!",
+                    contest:'beholder.sanity>2',
+                    resultFail:"beholder.HP--; beholder.sanity--; beholder.happiness--;",
+                    textResultFail:[`${beholder.name} conjures a powerful shield to defend against the boss's ultimate attack! Problem is, ${beholder.name} doesn't believe in themself enoough and takes part of the hit.`,'HP▼, Sanity▼, Happiness▼'],
+                    resultWin:"beholder.sanity+=2; beholder.happiness++;",
+                    textResultWin:[`${beholder.name} conjures a powerful shield to defend against the boss's ultimate attack! With enough faith in themself, ${beholder.name}'s shield returns the attack back upon the boss!`,'Sanity▲▲, Happiness▲'],
         
                 },
                 {
-                    text:"Rise above the floor avoiding the attack!",
-                    contest:'true',
-                    resultFail:"",
-                    textResultFail:['',''],
-                    resultWin:"roomSet=bossRooms;",
-                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
+                    text:"Joyously rise above the floor avoiding the attack!",
+                    contest:'beholder.happiness>3',
+                    resultFail:"beholder.HP--; beholder.happiness--;",
+                    textResultFail:[`${beholder.name} attempts to rise above the wave of force emenated by the ${boss}. Unfortunately, their joy is not sufficient and their pride (and main eye) is singed!`,'HP▼, Happiness▼'],
+                    resultWin:"beholder.happiness+=2;",
+                    textResultWin:[`${beholder.name} shoots towards the ceiling, the ultimate wave of doom passing just underneath! A profound appreciation for life washes over ${beholder.name}`,'Happiness▲▲'],
                 },
                 {
                     text:"If you can't see the attack it can't hurt you!",
-                    contest:'true',
-                    resultFail:"",
-                    textResultFail:['',''],
-                    resultWin:"roomSet=bossRooms;",
-                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
+                    contest:'beholder.sanity<-2',
+                    resultFail:"beholder.HP--; beholder.sanity=0;",
+                    textResultFail:[`${beholder.name} closes all their eyes and imagines the soothing sounds of screeching and gibbering. Unfortunately all they hear is the sound of a thunderous wave of force headed straight for them!`,'HP▼, Sanity reset to neutral'],
+                    resultWin:"beholder.sanity=beholder.minSanity; beholder.happiness+=2;",
+                    textResultWin:[`${beholder.name} closes all their eyes and imagines the soothing sounds of screeching and gibbering. when they open their eyes, the power of denial has negated the attack!`,'Sanity completely gone, Happiness▲▲'],
                 },
                 {
                     text:"Best defense is a good EYE-RAY BLAST!!!",
-                    contest:'true',
-                    resultFail:"",
-                    textResultFail:['',''],
-                    resultWin:"roomSet=bossRooms;",
-                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
+                    contest:'beholder.eyestalks>5',
+                    resultFail:"beholder.HP--; beholder.eyestalks-=2;",
+                    textResultFail:[`${beholder.name} cycles through all their available eye-rays, but by the time they get to the one that might work, the blast is already upon them singing several eyestalks!`,'HP▼, Eyestalks▼▼'],
+                    resultWin:"beholder.eyestalks+=2; beholder.happiness++;",
+                    textResultWin:[`${beholder.name} unleashes a focused death ray straight through the blast, cutting its power significantly and reducing it to a light breeze.`,'Eyestalks▲▲, Happiness▲'],
                 },
             ]
         },
@@ -577,12 +577,12 @@ function getRoomsList(list, index){
             textEnter:`The ${boss} takes a wide turn, showing its weariness. Now is the time to finish it!`,
             choices:[
                 {
-                    text:"EYE-RAY! EYE-RAY! EYE-RAY!",
-                    contest:'true',
-                    resultFail:"",
-                    textResultFail:['',''],
+                    text:"EYE-RAY! EYE-RAY! ALL OUT EYE-RAY!",
+                    contest:'beholder.eyestalks>5 || beholder.sanity>3 || beholder.sanity<=-5 || beholder.happiness>=4',
+                    resultFail:'currentRoom=roomLayout.standardRoomRun*0.5',
+                    textResultFail:[`In slow motion, ${beholder.name}'s attack concentrates upon the ${boss}, but in their weakened state, ${beholder.name} miscalculates and is knocked unconscious. They wake up hours later elsewhere in the dungeon`,''],
                     resultWin:"",
-                    textResultWin:[`${beholder.name} slowly opens the door...`],
+                    textResultWin:[`In slow motion, ${beholder.name} charges a powerful death ray, then, with a sinister smile, unleashes it upon the ${boss} sending it beyond the material plane!`],
         
                 },
             ]
