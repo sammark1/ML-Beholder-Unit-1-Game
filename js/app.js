@@ -1,5 +1,4 @@
 /*TODO
---finish boss rooms
 --add/fix results for bottomed stats
 --shuffle standard rooms array then run down the list
 --add more rooms
@@ -35,8 +34,9 @@ let beholder ={
     happiness:2,
 };
 let currentRoom = 0;
+let displayRoom = 0;
 const roomLayout={
-    standardRoomRun:6,
+    standardRoomRun:8,
     bossRoomRun:4
 }
 //ANCHOR Referential objects and arrays
@@ -58,6 +58,7 @@ const bossWords={
     suffix:['of Doom', 'from the nine Hells','Filled With Razorblades'],
 }
 let boss ="";
+const audio = document.querySelector('#soundtrack');
 //ANCHOR JQuery declarations
 const $popover =$('#popover');
 const $popEls={
@@ -82,6 +83,11 @@ const $displays = {
 //SECTION 2:Utility functions
 //=========================================================
 //ANCHOR random number
+function soundtrack(control){
+    audio.volume = 0.5;
+    if (control==="play"){audio.play();}
+    else{audio.pause();audio.currentTime = 0;} 
+}
 function randomNum(rangeStart,rangeEnd){
     return(Math.floor(Math.random()*rangeEnd)+rangeStart);
 }
@@ -101,7 +107,7 @@ function clearAll(){
 //ANCHOR update status displays
 function updateStatDisp(){
     $displayBhName.text(beholder.name);
-    $displays.disRoomNum.text(currentRoom);
+    $displays.disRoomNum.text(displayRoom);
     //hp translation
     {
         let hearts = '';
@@ -161,6 +167,7 @@ function newGame(){
 }
 //ANCHOR show intro
 function showIntro1(){
+    soundtrack("play");
     $popover.show();
     $popEls.header.hide();
     $popEls.input.hide();
@@ -168,7 +175,6 @@ function showIntro1(){
     let p3='<p>Along the way you’ll need to help your beholder develop their <span id="highlight">eyestalks</span>, keep their <span id="highlight">sanity</span> high,  maintain <span id="highlight">happiness</span>, and, most important, keep their <span id="highlight">HP</span> (hitpoints) above 0 to avoid death.</p>';
     let p4='<p>Help your beholder conquor (or obliterate) the dungeon and replace the end boss!</p>'
     $popEls.content.html(p1+p3+p4);
-    //$popEls.content.html('That little floating eyeball you found has turned out to be one of the most beautiful creatures in all the lands, a many eye-stalked <span id="highlight">beholder</span>. Impossibly irrational, narcicistic, and xenophobic as beholders are, your only option is to lead your little charge to the nearest dungeon and guide it along the way to becoming the dungeon boss. \nAlong the way you’ll need to help your beholder develop their <span id="highlight">eyestalks</span>, keep their <span id="highlight">sanity</span> high,  maintain <span id="highlight">happiness</span>, and, most important, keep their <span id="highlight">HP</span> (hitpoints) above 0 to avoid death.');
     $popEls.button.on('click',function(){
         getRoom();
     });
@@ -181,6 +187,7 @@ function resetAll(){
     beholder.sanity=0;
     beholder.happiness=2;
     currentRoom=0;
+    displayRoom-0;
     //NOTE CHEAT OVERRIDE ON STATS
     // beholder.eyestalks=0   ;
     // beholder.sanity=beholder.maxSanity;
@@ -237,13 +244,27 @@ function choiceResults(){
     //resolve stat ranges and conditions
     if(beholder.eyestalks<0){beholder.eyestalks=0}
     if(beholder.sanity>beholder.maxSanity){beholder.sanity=beholder.maxSanity}
-    else if(beholder.sanity<beholder.minSanity){beholder.sanity=beholder.minSanity}
+    else if(beholder.sanity<beholder.minSanity){
+        beholder.sanity=beholder.minSanity
+        const rando=randomNum(0,3);
+        if(rando===0){
+            $displayText.append($(`<p>${beholder.name} sees TERRIFYING emus out of the corner of their eye. <span id="highlight">Happiness▼</span></p>`));
+            beholder.happiness--;
+        }
+        else if(rando===1){
+            $displayText.append($(`<p>${beholder.name} tells themself everything is OK. <span id="highlight">Sanity reset</span></p>`));
+            beholder.sanity=0;
+        }
+        else if(rando===2){
+            $displayText.append($(`<p>${beholder.name} Zaps off a treasonous eyestalk. <span id="highlight">Eyestalks ▼</span></p>`));
+            beholder.eyestalks--;
+        }
+    }
     if(beholder.happiness>beholder.maxHappiness){beholder.happiness=beholder.maxHappiness;}
     else if(beholder.happiness<0){
         beholder.happiness=0;
         if(Math.floor(Math.random()*2)){
-            const $subDisplayText =$(`<p>${beholder.name} is feeling rather down in the dumps. <span id="highlight">HP▼</span></p>`);
-            $displayText.append($subDisplayText);
+            $displayText.append($(`<p>${beholder.name} is feeling rather down in the dumps. <span id="highlight">HP▼</span></p>`));
             beholder.HP--;
         }
     }
@@ -258,6 +279,7 @@ function choiceResults(){
 function nextRoom(){
     clearAll();
     currentRoom++;
+    displayRoom++;
     getRoom();
 }
 
@@ -308,7 +330,7 @@ function getRoomsList(list, index){
             choices:[
                 {
                     text:"Eye-ray that wall!",
-                    contest:'beholder.eyestalks>=2',
+                    contest:'beholder.eyestalks>=1',
                     resultFail:"console.log('fail'); beholder.happiness+=-1;",
                     textResultFail:[`${beholder.name} shoots the wall with an eye ray! unfortunately they use their petrify beam and freeze the wall in place permanantly. They have to find another way around.`,"Happiness▼"],
                     resultWin:"console.log('win'); beholder.happiness++; beholder.eyestalks++;",
@@ -317,11 +339,11 @@ function getRoomsList(list, index){
                 },
                 {
                     text:"Politely ask the wall to move",
-                    contest:'beholder.sanity<=2',
+                    contest:'beholder.sanity<=1',
                     resultFail:"beholder.happiness--;",
                     textResultFail:[`${beholder.name} politely asks the wall to move. The wall stands still. What a silly thing to do.`, 'Happiness▼'],
                     resultWin:"beholder.happiness++; beholder.sanity--;",
-                    textResultWin:[`${beholder.name} politely asks the wall to move. The wall takes a sweeping bow and shifts aside. ${beholder.name} is very pleased with themself.`,'Happiness▲, sanity▼'],
+                    textResultWin:[`${beholder.name} politely asks the wall to move. The wall, respecting their sanity level, takes a sweeping bow and shifts aside. ${beholder.name} is very pleased with themself.`,'Happiness▲, sanity▼'],
                 },
             ]
         },
@@ -331,8 +353,8 @@ function getRoomsList(list, index){
                 {
                     text:"GRAB THAT MAYO ORB!",
                     contest:'beholder.sanity>=0',
-                    resultFail:"beholder.HP+=-1;",
-                    textResultFail:[`${beholder.name} grabs the orb without hesitation. Unfortunately it doesn't function in ${beholder.name}'s anti-magic eye and short circuits, zapping them in the mouth.`,'HP▼'],
+                    resultFail:"beholder.Eyestalks+=-1;",
+                    textResultFail:[`${beholder.name} grabs the orb without hesitation. Unfortunately it doesn't function in ${beholder.name}'s anti-magic eye and short circuits, zapping them in the eye.`,'Eyestalks▼'],
                     resultWin:"beholder.eyestalks++;",
                     textResultWin:[`${beholder.name} grabs the orb without hesitation. It appears to contain knowledge of mayonaise based magic.`, `Eyestalks▲`],
         
@@ -343,15 +365,15 @@ function getRoomsList(list, index){
                     resultFail:"console.log('error: check ROOM 2 choice[1]')",
                     textResultFail:[``, 'ERROR CHECK CONSOLE LOG'],
                     resultWin:"",
-                    textResultWin:[`${beholder.name} happily continues on their merry way. They don't like mayonaise anyway.`,''],
+                    textResultWin:[`${beholder.name} safely continues on their merry way. They don't like mayonaise anyway.`,''],
                 },
                 {
                     text:"Split it open like an egg, with an EYE-RAY!",
-                    contest:'beholder.eyestalks > 4',
+                    contest:'beholder.eyestalks>=1',
                     resultFail:"beholder.happiness--;",
-                    textResultFail:[`The small sphere breaks open revealing its mayonaise goodness. Unfortunately, ${beholder.name} forgot to negate the sphere's magic while opening it and it explodes in a massive A.O.E. mayonaise ball.`, `HP▼`],
-                    resultWin:"beholder.happiness++; beholder.HP++;",
-                    textResultWin:[`the small sphere breaks open revealing its mayonaise goodness, and it turns out to be MAGIC MAYONAISE.`,`HP▲ Happiness▲`],
+                    textResultFail:[`The small sphere breaks open revealing its mayonaise goodness. Unfortunately, ${beholder.name} forgot to negate the sphere's magic while opening it and it explodes in a massive A.O.E. mayonaise ball.`, `Happiness▼`],
+                    resultWin:"beholder.happiness++; beholder.eyestalks++;",
+                    textResultWin:[`the small sphere breaks open revealing its mayonaise goodness, and it turns out to be MAGIC MAYONAISE.`,`Happiness▲, Eyestalks▲`],
                 },
             ]
         },
@@ -360,7 +382,7 @@ function getRoomsList(list, index){
             choices:[
                 {
                     text:"8. 8. 8. 8. 8. 8. 8. 8...",
-                    contest:'beholder.sanity > 2',
+                    contest:'beholder.sanity >=2',
                     resultFail:"beholder.sanity--; beholder.happiness--;",
                     textResultFail:[`${beholder.name} takes a long look at the numbers. The word "EIGHT" repeats in their mind. EIGHT. EIGHT. EIGHT. EIGHT. EIIIIIIII... ${beholder.name} awakens in hallway, no memory of how they got there and a searing headache`, `sanity▼, Happiness▼`],
                     resultWin:"beholder.happiness++; beholder.sanity++;",
@@ -368,11 +390,11 @@ function getRoomsList(list, index){
                 },
                 {
                     text:"Search the room for loot.",
-                    contest:'beholder.eyestalks>2',
+                    contest:'beholder.eyestalks>=2',
                     resultFail:'beholder.sanity--; beholder.happiness--',
                     textResultFail:[`${beholder.name} traces the room in a figure-eight all the while burning a path in the floor to avoid getting lost. Unfortunately the path burns clean through the floor! ${beholder.name} falls their pride is quite hurt.`,'Happiness▼, Sanity▼'],
                     resultWin:'beholder.sanity++;',
-                    textResultWin:[`One of ${beholder.name}'s eyestalks spies a glistening crystal skull. They pick it up and it speaks great wisdom into their mind: "DON'T TRUST THE EMU." ${beholder.name} decides to keep that in mind`, `sanity▲`],
+                    textResultWin:[`One of ${beholder.name}'s eyestalks spies a glistening crystal skull. They pick it up and it speaks great wisdom into their mind: "DON'T TRUST THE EMU." ${beholder.name} decides to keep that in mind`, `Sanity▲`],
                 },
             ]
         },
@@ -381,15 +403,15 @@ function getRoomsList(list, index){
             choices:[
                 {
                     text:"EYE-RAYS IN EVERY DIRECTION!",
-                    contest:'beholder.eyestalks>1',
+                    contest:'beholder.eyestalks>=2',
                     resultFail:'beholder.HP--;',
                     textResultFail:[`${beholder.name} sends eye-rays in every possible direction. The adventurer, however, is weilding a shield that is polished to a mirror shine, and ${beholder.name}'s disintegrate beam is reflected back. The adventurer flees in an unknown direction!`,'HP▼'],
-                    resultWin:'beholder.eyestalks++; beholder.happiness++',
-                    textResultWin:[`${beholder.name} sends eye-rays in several directions. one strikes an enormous vine on the celing, bewitching it to become ${beholder.name}'s friend! The vine swats the adventurer through the celining and into an unknown other room and ${beholder.name} thanks their new vine friend.'`, `Eyestalks▲, Happiness▲`],
+                    resultWin:'beholder.eyestalks++; beholder.happiness++;',
+                    textResultWin:[`${beholder.name} sends eye-rays in several directions. one strikes an enormous vine on the celing, bewitching it to become ${beholder.name}'s friend! The vine swats the adventurer through the celining and into an unknown other room and ${beholder.name} thanks their new vine friend.`, `Eyestalks▲, Happiness▲`],
                 },
                 {
                     text:`Attempt to convince the adventurer you're not a threat`,
-                    contest:'beholder.sanity>2',
+                    contest:'beholder.sanity>=3',
                     resultFail:'beholder.HP--;',
                     textResultFail:[`${beholder.name} relays a woeful tale of a poor abandoned dream of an eldritch god, made incarnate and left to die, named ${beholder.name}. Unfortunately it seems the adventurer only speaks a regional dialect of Sylvan and can't understand a word. Judging them by appearance, the Adventurer attacks ${beholder.name} with an arrow, then runs off to a different room!`,'HP▼'],
                     resultWin:'beholder.happiness++;',
@@ -397,7 +419,7 @@ function getRoomsList(list, index){
                 },
                 {
                     text:"Spook the adventurer with a grand illusion!",
-                    contest:'beholder.eyestalks>0',
+                    contest:'beholder.eyestalks>=2',
                     resultFail:'beholder.HP--;',
                     textResultFail:[`${beholder.name} Creates the image of a grand red dragon, complete with gnashing drooling teeth, spiny tail, shiny crimson scales and the smell of sulfur. Unfortunately it has a dinky smile on its face, and the adventurer looks a little too closely at it. Realizing the illusion, the adventurer sends an arrow at ${beholder.name}`,'HP▼'],
                     resultWin:'beholder.eyestalks++;',
@@ -405,7 +427,7 @@ function getRoomsList(list, index){
                 },
                 {
                     text:"Reward the adventurer for their bravery",
-                    contest:'beholder.happiness>2',
+                    contest:'beholder.happiness>=2',
                     resultFail:'beholder.HP--; beholder.happiness--;',
                     textResultFail:[`${beholder.name} emerges to grant a reward upon the brave adventurer, but winds up floating up too high while giving a speech praising the adventurer's fashion choices. ${beholder.name} bonks their head on a stalactite and flees the room out of embarrassment.`,'HP▼ Happiness▼'],
                     resultWin:'beholder.happiness++; beholder.eyestalks++;',
@@ -458,22 +480,63 @@ function getRoomsList(list, index){
                 },
             ]
         },
-
-        //ANCHOR room 6: Smasher trap puzzle
-        //ANCHOR room 7: portal to sideways tower
+        {//ANCHOR room 6: Trap puzzle
+            textEnter:`${beholder.name} enters a narrow rectangular corridor covered in brambles on all sides, at the end of which, a glowing capsule emenates dark energy.`,
+            choices:[
+                {
+                    text:"Travel cautiously down the corridor",
+                    contest:'beholder.eyestalks>=2',
+                    resultFail:'beholder.happiness--;',
+                    textResultFail:[`${beholder.name} moves into the brambles, but they immediatley constrict and restrain ${beholder.name}.They need to find another way around`,'Happiness▼'],
+                    resultWin:'beholder.eyestalks++;',
+                    textResultWin:[`${beholder.name} sweeps the brambles as they go, reaching the end unscathed. The glowing capsule turns out to be a capsule of hidden eyes.${beholder.name} recieves an eye upon their forehead`, `Eyestalks▲`],
+                },
+                {
+                    text:"Investigate the corridor",
+                    contest:'beholder.sanity>0',
+                    resultFail:'beholder.sanity--;',
+                    textResultFail:[`${beholder.name} looks carefully at the corridor, coming to the conclusion that brambles won't hurt if they float over everything. Unfortunately, the brambles sense ${beholder.name} as they float over, restraining them`,'Sanity▼'],
+                    resultWin:'beholder.sanity++; beholder.happiness++;',
+                    textResultWin:[`${beholder.name} discoveres the corridor is trapped with Grapple-Vine! to avoid it, ${beholder.name} simply rolls it like a carpet until they can reach the capsule, which is full of EVIL COINS!`, `Sanity▲, Happiness▲`],
+                },
+                {
+                    text:"This is clearly too dangerous",
+                    contest:'true',
+                    resultFail:'',
+                    textResultFail:[`${beholder.name}...`,'STAT▼▲'],
+                    resultWin:'',
+                    textResultWin:[`${beholder.name} doesn't want to deal with this jank. They travel off in a different direction`, ``],
+                },
+            ]
+        },
+        {//ANCHOR room 7: portal to sideways tower
+            textEnter:`${beholder.name} slides down into a chamber, the floor of which is a <span id="highlight">swirling dark void</span> pulling them in!`,
+            choices:[
+                {
+                    text:"Surrender to the void",
+                    contest:'happiness<=1',
+                    resultFail:'beholder.happiness--;',
+                    textResultFail:[`${beholder.name} is swallowed by the void but fights its influence. The void consumes ${beholder.name}'s happines'`,'Happiness▼'],
+                    resultWin:'beholder.happiness+=2;',
+                    textResultWin:[`${beholder.name} allows the darkness to swallow them, feeling unworthy to continue. However, the vortex shows ${beholder.name} a reflection of their greatest qualities, then plorps them out in a pleasant room full of flowers`, `Happiness▲▲`],
+                },
+                {
+                    text:'Find a ledge to a"void" the void',
+                    contest:'sanity<=0',
+                    resultFail:'beholder.sanity++; beholder.happiness--;',
+                    textResultFail:[`${beholder.name} HATES puns.`,'Sanity▲, Happiness▲'],
+                    resultWin:"beholder.sanity--; beholder.happiness++;",
+                    textResultWin:[`${beholder.name} says "What a pun time we're all having" then HA-CHA-CHA's off stage.`, `Sanity▼, Happiness▲`],
+                },
+            ]
+        },
         //ANCHOR room 8: DANGER: glitching goblin.
         //ANCHOR room 9: Slippery Squid game
         //ANCHOR room 10: What is a Cheeseburger?
         //ANCHOR room 11: Ford the river
         //ANCHOR room 12: DANGER: DON'T TRUST THE EMU.
         //ANCHOR room 13: The Obvious room.
-    ]
-    const insaneRooms=[
-        //ANCHOR insane room 1: The walls also have eyes
-    ]
-    const deathtrapRooms=[
-        //ANCHOR deathtrap room 1: 
-    ]
+    ];
     const bossRooms =[
         {//ANCHOR boss room 0: anticipation
             textEnter:`${beholder.name} finds themself staring down a long corridor, at the end of which stands a looming <span id="highlight">BOSS DOOR!</span> Warning this will be <span id="highlight">very dangerous</span>`,
