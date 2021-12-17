@@ -52,6 +52,12 @@ const hpIcons =[
     'favorite',
     'favorite_border',
 ]
+const bossWords={
+    adj:['Undying', 'cataclysmic'],
+    noun:['Basalisk','Black Dragon','Tarrasque','Greg'],
+    suffix:['of Doom', 'from the 9 Hells'],
+}
+let boss ="";
 //ANCHOR JQuery declarations
 const $popover =$('#popover');
 const $popEls={
@@ -78,6 +84,10 @@ const $displays = {
 //ANCHOR random number
 function randomNum(rangeStart,rangeEnd){
     return(Math.floor(Math.random()*rangeEnd)+rangeStart);
+}
+function RandomBoss(){
+    boss=`${bossWords.adj[randomNum(0,bossWords.adj.length)]} ${bossWords.noun[randomNum(0,bossWords.noun.length)]} ${bossWords.suffix[randomNum(0,bossWords.suffix.length)]}`;
+    console.log(boss);
 }
 //!SECTION
 //=========================================================
@@ -130,6 +140,7 @@ function addChoice(choicesIndex,text){
 //ANCHOR new game
 function newGame(){
     clearAll();
+    RandomBoss();
     $popover.show();
     $popEls.header.show();
     $popEls.header.text('My Little Beholder');
@@ -481,16 +492,16 @@ function getRoomsList(list, index){
                     contest:'true',
                     resultFail:"",
                     textResultFail:['',''],
-                    resultWin:"roomSet=bossRooms;",
+                    resultWin:"",//FIXME
                     textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
                 },
             ]
         },
         {//ANCHOR boss room 1: DANGER: Engage the Boss!
-            textEnter:`BOSS ROOM 1.`,
+            textEnter:`${beholder.name} cautiously enteres the enormous circular chamber, eyestalks at the ready. Suddenly, Dropping from the ceiling is an enormous ${boss} which promptly roars with fury at ${beholder.name}`,
             choices:[
                 {
-                    text:"Open the door and Continue",
+                    text:"Sling those eye-rays",
                     contest:'true',
                     resultFail:"",
                     textResultFail:['',''],
@@ -499,29 +510,61 @@ function getRoomsList(list, index){
         
                 },
                 {
-                    text:"Turn Back and seek another room",
+                    text:"Use your beholderly gile and charm",
+                    contest:'true',
+                    resultFail:"",
+                    textResultFail:['',''],
+                    resultWin:"",
+                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
+                },
+                {
+                    text:`Point out the ${boss} is not wearing clothes`,
+                    contest:'true',
+                    resultFail:"",
+                    textResultFail:['',''],
+                    resultWin:"",
+                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
+                },
+                {
+                    text:`Watch the ${boss} and learn its weaknesses`,
+                    contest:'true',
+                    resultFail:"",
+                    textResultFail:['',''],
+                    resultWin:"",
+                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
+                },
+            ]
+        },
+        {//ANCHOR boss room 2: DANGER: The Boss Attacks
+            textEnter:`The ${boss} lets out an enormous roaring blast attack! It tears the floor to rubble and blasts the ceiling open as it travels straingt for ${beholder.name}`,
+            choices:[
+                {
+                    text:"OH SH...ield!",
+                    contest:'true',
+                    resultFail:"",
+                    textResultFail:['',''],
+                    resultWin:"",
+                    textResultWin:[`${beholder.name} slowly opens the door...`],
+        
+                },
+                {
+                    text:"Rise above the floor avoiding the attack!",
                     contest:'true',
                     resultFail:"",
                     textResultFail:['',''],
                     resultWin:"roomSet=bossRooms;",
                     textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
                 },
-            ]
-        },
-        {//ANCHOR boss room 2: DANGER: The Boss Attacks
-            textEnter:`BOSS ROOM 2.`,
-            choices:[
                 {
-                    text:"Open the door and Continue",
+                    text:"If you can't see the attack it can't hurt you!",
                     contest:'true',
                     resultFail:"",
                     textResultFail:['',''],
-                    resultWin:"",
-                    textResultWin:[`${beholder.name} slowly opens the door...`],
-        
+                    resultWin:"roomSet=bossRooms;",
+                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
                 },
                 {
-                    text:"Turn Back and seek another room",
+                    text:"Best defense is a good EYE-RAY BLAST!!!",
                     contest:'true',
                     resultFail:"",
                     textResultFail:['',''],
@@ -531,24 +574,16 @@ function getRoomsList(list, index){
             ]
         },
         {//ANCHOR boss room 3: Defeat the boss!
-            textEnter:`BOSS ROOM 3`,
+            textEnter:`The ${boss} takes a wide turn, showing its weariness. Now is the time to finish it!`,
             choices:[
                 {
-                    text:"Open the door and Continue",
+                    text:"EYE-RAY! EYE-RAY! EYE-RAY!",
                     contest:'true',
                     resultFail:"",
                     textResultFail:['',''],
                     resultWin:"",
                     textResultWin:[`${beholder.name} slowly opens the door...`],
         
-                },
-                {
-                    text:"Turn Back and seek another room",
-                    contest:'true',
-                    resultFail:"",
-                    textResultFail:['',''],
-                    resultWin:"roomSet=bossRooms;",
-                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
                 },
             ]
         },
