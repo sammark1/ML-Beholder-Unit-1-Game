@@ -35,7 +35,10 @@ let beholder ={
     happiness:2,
 };
 let currentRoom = 0;
-let roomSet = 'standardRooms'
+const roomLayout={
+    standardRoomRun:6,
+    bossRoomRun:4
+}
 //ANCHOR Referential objects and arrays
 const happinessIcons=[
     'mood_bad',
@@ -176,9 +179,12 @@ function resetAll(){
 //ANCHOR get appropriate room
 function getRoom(){
     $popover.hide();
-    if(currentRoom>=6){
-        console.log("room > 6");
-        assembleRoom(getRoomsList('bossRooms')[currentRoom-6])
+    if(currentRoom>=roomLayout.standardRoomRun && currentRoom<roomLayout.standardRoomRun+roomLayout.bossRoomRun){
+        //console.log("room > 6");
+        assembleRoom(getRoomsList('bossRooms')[currentRoom-roomLayout.standardRoomRun])
+    }
+    else if(currentRoom>=roomLayout.bossRoomRun+roomLayout.standardRoomRun){
+        gameWin();
     }
     else{
         assembleRoom(getRoomsList('standardRooms')[randomNum(0,getRoomsList('standardRooms').length)])
@@ -256,6 +262,16 @@ function gameOver(){
     $popEls.header.show()
     $popEls.header.text("GAME OVER")
     $popEls.content.text(`${beholder.name} has lost all their HP!`);
+    $popEls.button.text('New Game?')
+    $popEls.button.on('click',newGame);
+}
+function gameWin(){
+    updateStatDisp();
+    $popover.show();
+    $popEls.input.hide();
+    $popEls.header.show()
+    $popEls.header.text("VICTORY!")
+    $popEls.content.html(`<p>${beholder.name} has made their way to the end of the dungeon and defeated the boss! They will now proudly live the rest of their days as a menace to the natural and humanoid worlds.</p><p>Credits: Mostly Sam Mark. a little help from Gabe, Alex, and, of course, ${beholder.name}`);
     $popEls.button.text('New Game?')
     $popEls.button.on('click',newGame);
 }
@@ -471,29 +487,71 @@ function getRoomsList(list, index){
             ]
         },
         {//ANCHOR boss room 1: DANGER: Engage the Boss!
-            textEnter:`${beholder.name} runs headlong into a wall. They HATE WALLS. Walls mock them.`,
+            textEnter:`BOSS ROOM 1.`,
             choices:[
                 {
-                    text:"Eye-ray that wall!",
-                    contest:'beholder.eyestalks>=2',
-                    resultFail:"console.log('fail'); beholder.happiness+=-1;",
-                    textResultFail:[`${beholder.name} shoots the wall with an eye ray! unfortunately they use their petrify beam and freeze the wall in place permanantly. They have to find another way around.`,"Happiness▼"],
-                    resultWin:"console.log('win'); beholder.happiness++; beholder.eyestalks++;",
-                    textResultWin:[`${beholder.name} shoots the wall with an eye ray! It disintegrates right before their gleeful face.`,'Happiness▲, Eyestalks▲'],
+                    text:"Open the door and Continue",
+                    contest:'true',
+                    resultFail:"",
+                    textResultFail:['',''],
+                    resultWin:"",
+                    textResultWin:[`${beholder.name} slowly opens the door...`],
         
                 },
                 {
-                    text:"Politely ask the wall to move",
-                    contest:'beholder.sanity<=2',
-                    resultFail:"beholder.happiness--;",
-                    textResultFail:[`${beholder.name} politely asks the wall to move. The wall stands still. What a silly thing to do.`, 'Happiness▼'],
-                    resultWin:"beholder.happiness++; beholder.sanity--;",
-                    textResultWin:[`${beholder.name} politely asks the wall to move. The wall takes a sweeping bow and shifts aside. ${beholder.name} is very pleased with themself.`,'Happiness▲, sanity▼'],
+                    text:"Turn Back and seek another room",
+                    contest:'true',
+                    resultFail:"",
+                    textResultFail:['',''],
+                    resultWin:"roomSet=bossRooms;",
+                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
                 },
             ]
         },
-        //ANCHOR boss room 2: DANGER: The Boss Attacks
-        //ANCHOR boss room 3: Defeat the boss!
+        {//ANCHOR boss room 2: DANGER: The Boss Attacks
+            textEnter:`BOSS ROOM 2.`,
+            choices:[
+                {
+                    text:"Open the door and Continue",
+                    contest:'true',
+                    resultFail:"",
+                    textResultFail:['',''],
+                    resultWin:"",
+                    textResultWin:[`${beholder.name} slowly opens the door...`],
+        
+                },
+                {
+                    text:"Turn Back and seek another room",
+                    contest:'true',
+                    resultFail:"",
+                    textResultFail:['',''],
+                    resultWin:"roomSet=bossRooms;",
+                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
+                },
+            ]
+        },
+        {//ANCHOR boss room 3: Defeat the boss!
+            textEnter:`BOSS ROOM 3`,
+            choices:[
+                {
+                    text:"Open the door and Continue",
+                    contest:'true',
+                    resultFail:"",
+                    textResultFail:['',''],
+                    resultWin:"",
+                    textResultWin:[`${beholder.name} slowly opens the door...`],
+        
+                },
+                {
+                    text:"Turn Back and seek another room",
+                    contest:'true',
+                    resultFail:"",
+                    textResultFail:['',''],
+                    resultWin:"roomSet=bossRooms;",
+                    textResultWin:[`${beholder.name} backs away from the imposing door, finding their way to a different part of the dungeon`,''],
+                },
+            ]
+        },
 
     ]
     if(list==="bossRooms"){
