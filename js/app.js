@@ -1,9 +1,9 @@
 /*TODO
---add/fix results for bottomed stats
 --shuffle standard rooms array then run down the list
 --add more rooms
 --manage art
 --add more art
+--mute button
 
 HP doesn't often increase and is more likely to decrease in clearly dangerous situations. only ever decrease by 1 at a time
 eyestalks is like exp and increases with success. every room should have at least one option to increase eyestalks.
@@ -68,32 +68,45 @@ const $popEls={
     button:$('#poConfirm'),
 }
 const $displayBhName =$('.beholderName');
+const $mute =$('#mute').eq(0);
 const $displayText = $('#displayText');
 const $choices = $('#choices');
 const $displays = {
     disRoomNum:$('.dynDisp').eq(0),
-    disHP:$('.material-icons').eq(0),
+    disHP:$('.material-icons').eq(1),
     disEyestalks:$('.dynDisp').eq(2),
     disSanity:$('.dynDisp').eq(3),
-    disHappiness:$('.material-icons').eq(1),
+    disHappiness:$('.material-icons').eq(2),
 }
 
 //!SECTION
 //=========================================================
 //SECTION 2:Utility functions
 //=========================================================
-//ANCHOR random number
+$mute.on('click',mute);
+function mute(e){
+    if (audio.paused){
+        soundtrack("play");
+        $mute.text('volume_mute')
+        return;
+    }
+    else{
+        soundtrack("mute");
+        $mute.text('volume_off')
+        return;
+    }
+}
 function soundtrack(control){
     audio.volume = 0.5;
     if (control==="play"){audio.play();}
     else{audio.pause();audio.currentTime = 0;} 
 }
+//ANCHOR random number
 function randomNum(rangeStart,rangeEnd){
     return(Math.floor(Math.random()*rangeEnd)+rangeStart);
 }
 function RandomBoss(){
     boss=`${bossWords.adj[randomNum(0,bossWords.adj.length)]} ${bossWords.noun[randomNum(0,bossWords.noun.length)]} ${bossWords.suffix[randomNum(0,bossWords.suffix.length)]}`;
-    console.log(boss);
 }
 //!SECTION
 //=========================================================
@@ -198,7 +211,6 @@ function resetAll(){
 function getRoom(){
     $popover.hide();
     if(currentRoom>=roomLayout.standardRoomRun && currentRoom<roomLayout.standardRoomRun+roomLayout.bossRoomRun){
-        //console.log("room > 6");
         assembleRoom(getRoomsList('bossRooms')[currentRoom-roomLayout.standardRoomRun])
     }
     else if(currentRoom>=roomLayout.bossRoomRun+roomLayout.standardRoomRun){
@@ -226,9 +238,7 @@ function assembleRoom(roomObj){
 //ANCHOR user selection result
 function userChoice(roomObj,choiceIndex){
     clearAll()
-    //console.log("user clicked button ",choiceIndex);
     const choice = roomObj.choices[choiceIndex];
-    //console.log(setTimeout(choice.contest,1))
     if(eval(choice.contest)){
         setTimeout(choice.resultWin,1);
         getDisplayText(choice.textResultWin[0],choice.textResultWin[1]);
@@ -304,7 +314,7 @@ function gameWin(){
     $popEls.input.hide();
     $popEls.header.show()
     $popEls.header.text("VICTORY!")
-    $popEls.content.html(`<p>${beholder.name} has made their way to the end of the dungeon and defeated the boss! They will now proudly live the rest of their days as a menace to the natural and humanoid worlds.</p><p>Credits: Mostly Sam Mark. a little help from Gabe, Alex, and, of course, ${beholder.name}`);
+    $popEls.content.html(`<p>${beholder.name} has made their way to the end of the dungeon and defeated the boss! They will now proudly live the rest of their days as a menace to the natural and humanoid worlds.</p><p>Credits: Mostly Sam Mark. a little help from SEIRFX 119, Gabe, Alex, Hayley, and, of course, ${beholder.name}`);
     $popEls.button.text('New Game?')
     $popEls.button.on('click',newGame);
 }
@@ -331,9 +341,9 @@ function getRoomsList(list, index){
                 {
                     text:"Eye-ray that wall!",
                     contest:'beholder.eyestalks>=1',
-                    resultFail:"console.log('fail'); beholder.happiness+=-1;",
+                    resultFail:"beholder.happiness+=-1;",
                     textResultFail:[`${beholder.name} shoots the wall with an eye ray! unfortunately they use their petrify beam and freeze the wall in place permanantly. They have to find another way around.`,"Happiness▼"],
-                    resultWin:"console.log('win'); beholder.happiness++; beholder.eyestalks++;",
+                    resultWin:"beholder.happiness++; beholder.eyestalks++;",
                     textResultWin:[`${beholder.name} shoots the wall with an eye ray! It disintegrates right before their gleeful face.`,'Happiness▲, Eyestalks▲'],
         
                 },
@@ -362,7 +372,7 @@ function getRoomsList(list, index){
                 {
                     text:"This is clearly a wizard trap. Wizards are always trapping orbs.",
                     contest:'true',
-                    resultFail:"console.log('error: check ROOM 2 choice[1]')",
+                    resultFail:"",
                     textResultFail:[``, 'ERROR CHECK CONSOLE LOG'],
                     resultWin:"",
                     textResultWin:[`${beholder.name} safely continues on their merry way. They don't like mayonaise anyway.`,''],
@@ -473,7 +483,7 @@ function getRoomsList(list, index){
                 {
                     text:"Not interested, thank.",
                     contest:'true',
-                    resultFail:'console.log(Error: check room 5 choice[3])',
+                    resultFail:'',
                     textResultFail:[`error`,''],
                     resultWin:'',
                     textResultWin:[`${beholder.name} shrugs off the stat merchant and continues on, without any consequence`,],
@@ -522,7 +532,7 @@ function getRoomsList(list, index){
                 },
                 {
                     text:'Find a ledge to a"void" the void',
-                    contest:'sanity<=0',
+                    contest:'beholder.sanity<=0',
                     resultFail:'beholder.sanity++; beholder.happiness--;',
                     textResultFail:[`${beholder.name} HATES puns.`,'Sanity▲, Happiness▲'],
                     resultWin:"beholder.sanity--; beholder.happiness++;",
@@ -566,9 +576,9 @@ function getRoomsList(list, index){
                 {
                     text:"Sling those eye-rays",
                     contest:'beholder.eyestalks>3',
-                    resultFail:"console.log('notSet')",
+                    resultFail:"beholder.HP--; beholder.eyestalks++",
                     textResultFail:[`${beholder.name} slings dozens of eye-rays at the ${boss} landing a few devastating hits, but in the proccess, ${beholder.name} is hit by a stray rebounded enervation ray!`,'HP▼, Eyestalks▼'],
-                    resultWin:"console.log('notSet')",
+                    resultWin:"beholder.eyestalks+=2",
                     textResultWin:[`${beholder.name} slings a strong telekenetic ray at the ${boss}, blasting it back into a wall of spikes!`,'Eyestalks▲▲'],
         
                 },
@@ -653,7 +663,6 @@ function getRoomsList(list, index){
 
     ]
     if(list==="bossRooms"){
-        console.log("bossRooms")
         return(bossRooms);
     }
     else{
