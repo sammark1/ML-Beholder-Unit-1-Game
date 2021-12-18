@@ -27,9 +27,10 @@ body{
     position:absolute;
     color: var(--secondary2-light-color);
     background-color: var(--primary-dark-color);
-    max-width: 24em;
-    min-width: 24em;
-    left: 25%;
+    max-width: 55%;
+    min-width: 55%;
+    left: 0;
+    margin-left:20%;
     max-height: 24em;
     top:calc(35vh - 12em);
     border-radius: 12px;
@@ -63,11 +64,8 @@ header{
     align-items: center;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
-    border: red dotted 1px;
 }
-header>*{
-    border:lime dotted 1px;
-}
+
 .beholderName{
     color: var(--secondary2-light-color);
 }
@@ -153,6 +151,7 @@ input{
     border: var(--secondary2-dark-color) 2px inset;
 }
 p{
+    font-size: 14pt;
     color:var(--secondary2-light-color);
     margin-bottom: 1em;
 }
