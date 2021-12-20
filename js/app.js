@@ -201,9 +201,9 @@ function resetAll(){
     currentRoom=0;
     displayRoom=0;
     //NOTE CHEAT OVERRIDE ON STATS
-    // beholder.eyestalks=0   ;
-    // beholder.sanity=beholder.maxSanity;
-    // beholder.happiness=beholder.maxHappiness;
+    //beholder.eyestalks=20   ;
+    //beholder.sanity=beholder.maxSanity;
+    //beholder.happiness=beholder.maxHappiness;
     // beholder.HP=1;
 }
 //ANCHOR get appropriate room
@@ -222,7 +222,7 @@ function getRoom(){
         return;
     }
     //NOTE CHEAT OVERRIDE ON WHICH ROOM TO VIEW
-    //assembleRoom(getRoomsList('bossRooms')[1])
+    //assembleRoom(getRoomsList('standardRooms')[10])
 }
 //ANCHOR assemble room
 function assembleRoom(roomObj){
@@ -260,7 +260,7 @@ function choiceResults(){
         beholder.sanity=beholder.minSanity
         const rando=randomNum(0,3);
         if(rando===0){
-            $displayText.append($(`<p>${beholder.name} sees TERRIFYING emus out of the corner of their eye. <span id="highlight">Happiness▼</span></p>`));
+            $displayText.append($(`<p>${beholder.name} sees TERRIFYING llamas out of the corner of their eye. <span id="highlight">Happiness▼</span></p>`));
             beholder.happiness--;
         }
         else if(rando===1){
@@ -337,7 +337,7 @@ function getRoomsList(list, index){
     },
                     */
     const standardRooms =[
-        {//ANCHOR ROOM 1 happiness 
+        {//ANCHOR ROOM 0 walls 
             textEnter:`${beholder.name} runs headlong into a wall. They HATE WALLS. Walls mock them.`,
             choices:[
                 {
@@ -359,7 +359,7 @@ function getRoomsList(list, index){
                 },
             ]
         },
-        {//ANCHOR ROOM 2 HP danger with avoid path option
+        {//ANCHOR ROOM 1 HP danger with avoid path option
             textEnter:`${beholder.name} finds the skeleton of an old wizard. The spooky skeleton has a long gray beard and is clutching a glowing orb with something that looks like mayonaise inside. <span id="highlight">This could be dangerous.</span>`,
             choices:[
                 {
@@ -389,7 +389,7 @@ function getRoomsList(list, index){
                 },
             ]
         },
-        {//ANCHOR ROOM 3 
+        {//ANCHOR ROOM 2 
             textEnter:`${beholder.name} enters a chamber surrounded by glyphs depicting the number 8. There are no obvious exits`,
             choices:[
                 {
@@ -406,11 +406,11 @@ function getRoomsList(list, index){
                     resultFail:'beholder.sanity--; beholder.happiness--',
                     textResultFail:[`${beholder.name} traces the room in a figure-eight all the while burning a path in the floor to avoid getting lost. Unfortunately the path burns clean through the floor! ${beholder.name} falls their pride is quite hurt.`,'Happiness▼, Sanity▼'],
                     resultWin:'beholder.sanity++;',
-                    textResultWin:[`One of ${beholder.name}'s eyestalks spies a glistening crystal skull. They pick it up and it speaks great wisdom into their mind: "DON'T TRUST THE EMU." ${beholder.name} decides to keep that in mind`, `Sanity▲`],
+                    textResultWin:[`One of ${beholder.name}'s eyestalks spies a glistening crystal skull. They pick it up and it speaks great wisdom into their mind: "DON'T TRUST THE LLAMA." ${beholder.name} decides to keep that in mind`, `Sanity▲`],
                 },
             ]
         },
-        {//ANCHOR ROOM 4 DANGER 
+        {//ANCHOR ROOM 3 DANGER 
             textEnter:`Upon entering a large chamber filled with toppled pillars and a crumbling ceiling overgrown with vines, ${beholder.name} spies a HUMANOID ADVENTURER! <span id="highlight">This could be dangerous.</span>`,
             choices:[
                 {
@@ -438,7 +438,7 @@ function getRoomsList(list, index){
                     textResultWin:[`${beholder.name} invokes an image in the adventurer's mind of a pile of shimmering treasure cascading from the ceiling. The adventurer dives aside and cowers to avoid the cascade of illusory treasure as ${beholder.name} floats by undetected.`, `Eyestalks▲`],
                 },
                 {
-                    text:"Reward the adventurer for their bravery",
+                    text:"Joyously reward the adventurer for their bravery",
                     contest:'beholder.happiness>=2',
                     resultFail:'beholder.HP--; beholder.happiness--;',
                     textResultFail:[`${beholder.name} emerges to grant a reward upon the brave adventurer, but winds up floating up too high while giving a speech praising the adventurer's fashion choices. ${beholder.name} bonks their head on a stalactite and flees the room out of embarrassment.`,'HP▼ Happiness▼'],
@@ -447,7 +447,7 @@ function getRoomsList(list, index){
                 },
             ]
         },
-        {//ANCHOR room 5: wacky Busby's Stat Exchange
+        {//ANCHOR room 4: wacky Busby's Stat Exchange
             textEnter:`${beholder.name} floats down a cooridor and into a well furnished room filled with bits and baubles. They all sit haphazardly clustered around a spindly old man wearing an unusually clean bowler hat, which he tips in ${beholder.name}'s direction. "G'day, night, or other referential time frame, my good friend. I wonder If I could interest you in a small stat exchage. No buybacks and only one per customer." he says with a crooked smile.`,
             choices:[
                 {
@@ -492,7 +492,7 @@ function getRoomsList(list, index){
                 },
             ]
         },
-        {//ANCHOR room 6: Trap puzzle
+        {//ANCHOR room 5: Trap puzzle
             textEnter:`${beholder.name} enters a narrow rectangular corridor covered in brambles on all sides, at the end of which, a glowing capsule emenates dark energy. <span id="highlight">This could be dangerous.</span>`,
             choices:[
                 {
@@ -521,7 +521,7 @@ function getRoomsList(list, index){
                 },
             ]
         },
-        {//ANCHOR room 7: the void
+        {//ANCHOR room 6: the void
             textEnter:`${beholder.name} slides down into a chamber, the floor of which is a <span id="highlight">swirling dark void</span> pulling them in!`,
             choices:[
                 {
@@ -542,12 +542,12 @@ function getRoomsList(list, index){
                 },
             ]
         },
-        {//ANCHOR room 13: The Obvious room.
+        {//ANCHOR room 7: The Obvious room.
             textEnter:`${beholder.name} blasts through a wall and into a room with two signs, one pointing at a button that says <span id="highlight">"THIS BUTTON IS DANGEROUS,"</span> the other saying, <span id="highlight">"THIS BUTTON WILL MAKE YOU HAPPY." This could be dangerous.</span>`,
             choices:[
                 {
                     text:"Push the DANGEROUS button",
-                    contest:'beholder.sanity<=0',
+                    contest:'beholder.sanity<=-1',
                     resultFail:'beholder.HP--; beholder.happiness--;',
                     textResultFail:[`${beholder.name} pushes the DANGEROUS button. A jet of sharpened ice knives fly from ports on the wall stabbing ${beholder.name}! They are irked by the situation.`,'HP▼, Happiness▼'],
                     resultWin:'beholder.happiness++;',
@@ -555,7 +555,7 @@ function getRoomsList(list, index){
                 },
                 {
                     text:'Push the HAPPY button',
-                    contest:'beholder.sanity>=1',
+                    contest:'beholder.sanity>=0',
                     resultFail:'beholder.sanity--; beholder.happiness--;',
                     textResultFail:[`${beholder.name} pushes the HAPPY button. Coulrophobic distortions of humanoids in colorful wigs, facepaint and ill-fitting outfits bounce and tumble around ${beholder.name} and causes them to flee in PANIC.`,'Sanity▼, happiness▼'],
                     resultWin:"beholder.happiness++;",
@@ -563,11 +563,135 @@ function getRoomsList(list, index){
                 },
             ]
         },
-        //ANCHOR room 8: DANGER: glitching goblin.
-        //ANCHOR room 9: Slippery Squid game
-        //ANCHOR room 10: What is a Cheeseburger?
-        //ANCHOR room 11: Ford the river
-        //ANCHOR room 12: DANGER: DON'T TRUST THE EMU.
+        {//ANCHOR room 8: DANGER: glitching goblin.
+            textEnter:`${beholder.name} enters a room and hides behind a pillar when they spy an unusual creature in the distance. Upon closer inspection, it's a goblin, but something isn't right. It seems to stand perfectly still, its legs together and arms oustrechted to either side like the letter T. <span id="highlight">This could be dangerous.</span>`,
+            choices:[
+                {
+                    text:'Eye-ray the... "goblin"?',
+                    contest:'beholder.eyestalks>=3',
+                    resultFail:'beholder.HP--; beholder.happiness--; beholder.sanity--;',
+                    textResultFail:[`${beholder.name} sends an eye-ray or two at the goblin. To ${beholder.name}'s utter terror, the goblin seems to take no damage and, still upright posing like a T, slides rapidly over the terrain to ${beholder.name} where it aggressively stands too close and stares right into their main eye causing psychic damage! ${beholder.name} flees in terror.`,'HP▼, Happiness▼, Sanity▼'],
+                    resultWin:'beholder.eyestalks++;',
+                    textResultWin:[`${beholder.name} fires a death ray. The goblin immediately rotates on the spot without moving its legs. It's very creepy, but fortunately the eye-ray strikes true. The sound of a goblin being defeated can be heard, though the goblin remains standing and stationary. ${beholder.name} floats past unnerved by the... "dead"? goblin.`, `Eyestalks▲`],
+                },
+                {
+                    text:'Try to be friendly with the... "goblin"?',
+                    contest:'beholder.happiness>=3',
+                    resultFail:'beholder.HP--; beholder.happiness--; beholder.sanity--;',
+                    textResultFail:[`${beholder.name} emerges, attempting to communicate with the goblin, which immediately turns on the spot without moving its legs. In an uncanny and unnerving motion it slides over the terrain to ${beholder.name} and stops very close to them, frozen like a statue. ${beholder.name} opens their mouth to speak but immediately takes damage, seemingly from nowhere. In terror, they flee the room`,'HP▼, Happiness▼, Sanity▼'],
+                    resultWin:'beholder.happiness++;',
+                    textResultWin:[`${beholder.name} emerges, attempting to communicate with the goblin, which immediately turns on the spot without moving its legs. In an uncanny and unnerving motion it slides over the terrain to ${beholder.name} and stops very close to them, frozen like a statue. Fortunately It continues to follow ${beholder.name} as they float past but doesn't do anything else. ${beholder.name} continues on, relieved to be out of that room.`, `Happiness▲`],
+                },
+                {
+                    text:'Try to pass unnoticed by the... "goblin"?',
+                    contest:'beholder.sanity>=2',
+                    resultFail:'beholder.HP--; beholder.happiness--; beholder.sanity--;',
+                    textResultFail:[`${beholder.name}tries to slink past the goblin, which seems to occasionally rotate on the spot or slide along the ground without moving its legs. Suddenly, the goblin turns and starts sliding over the ground straingt for ${beholder.name} and stops very close to them, frozen like a statue. ${beholder.name} takes psychic damage and flees in terror!`,'HP▼, Happiness▼, Sanity▼'],
+                    resultWin:'beholder.sanity++;',
+                    textResultWin:[`${beholder.name} tries to slink past the goblin, which seems to occasionally rotate on the spot or slide along the ground without moving its legs. It's completely unclear if the goblin has noticed ${beholder.name}, but they somehow manage to float into the next room without the goblin reacting.`, `Sanity▲`],
+                },
+                {
+                    text:"Oh Nine Hells NO, not messing with that biz.",
+                    contest:'true',
+                    resultFail:'',
+                    textResultFail:[`${beholder.name}...`,'STAT▼▲'],
+                    resultWin:'',
+                    textResultWin:[`As the creepy goblin rotates on the spot without moving their legs to face in their direction, ${beholder.name} closes the door to the chamber and leaves that mess behind.`, ``],
+                },
+            ]
+        },
+        {//ANCHOR room 9: The choice room.
+            textEnter:`${beholder.name} makes their way into a chamber with two pedistals, each placed precariously above a large drop into an unknown abyss. Atop the right pedistal is a silver rod with golden inlay, and atop the left pedistal is a saphhire encrusted torc of woven platinum wire. Both objects eminate a strong magical presence but it seems like touching one will cause the other to drop out of reach.  `,
+            choices:[
+                {
+                    text:"Get the Silver and Gold Rod",
+                    contest:'true',
+                    resultFail:'',
+                    textResultFail:[`${beholder.name}...`,'STAT▼▲'],
+                    resultWin:'beholder.eyestalks++;',
+                    textResultWin:[`${beholder.name} floats over to the magical rod. Upon claiming it, the torc falls into the abyss and is lost for good`, `Eyestalks ▲`],
+                },
+                {
+                    text:"Get the Ruby Platinum Torc",
+                    contest:'true',
+                    resultFail:'',
+                    textResultFail:[`${beholder.name}...`,'STAT▼▲'],
+                    resultWin:'beholder.eyestalks++;',
+                    textResultWin:[`${beholder.name} floats over to the magical torc. Upon claiming it, the rod falls into the abyss and is lost for good`, `Eyestalks ▲`],
+                },
+                {
+                    text:"Try to claim them both",
+                    contest:'beholder.eyestalks>=4',
+                    resultFail:'beholder.happiness--;',
+                    textResultFail:[`${beholder.name} attempts to use their magic to hold both treasures in place, but in doing so, their anti-magic field sweeps both pedistals which fail to levatate, plunging both into the abyss. ${beholder.name} is quite disappointed.`,'Happiness▼'],
+                    resultWin:'beholder.eyestalks+=2;',
+                    textResultWin:[`${beholder.name} telekenetically pulls one magical item towards them, while using an eyestalk to hold onto the other. As both pedistals drop into the abyss, both magic items remain, and ${beholder.name} claims them both!`, `Eyestalks▲▲`],
+                },
+            ]
+        },
+        {//ANCHOR room 10: wabbit.
+            textEnter:`${beholder.name} enters a room with a tall arched ceiling and decorated frescoes and reliefs on every wall and ceiling depicting various leporidae. At the center of the room is a small metal pen encircling a hideous furry creature with two long ears and enormous incisors devouring an orange root.`,
+            choices:[
+                {
+                    text:"Disgusting! destroy it!",
+                    contest:'beholder.sanity<=0',
+                    resultFail:'beholder.happiness--;',
+                    textResultFail:[`${beholder.name} attempts to fire a disintegrate ray, but argues with themself over the true level of evil this creature exhudes, to the point where the eye-ray is accidentally a charm ray! the hideous creature decides to follow ${beholder.name} against their wishes!`,'Happiness▼'],
+                    resultWin:'beholder.eyestalks++;',
+                    textResultWin:[`${beholder.name} fires a disintegrate eye-ray at the small creature, reducing it to a pile of dust`, `Eyestalks▲`],
+                },
+                {
+                    text:"Recruit this evil being as a minion",
+                    contest:'beholder.sanity>=1',
+                    resultFail:'beholder.happiness--;',
+                    textResultFail:[`${beholder.name} decides the creature isn't too hideous, but while attempting to pull it along on a string, it gnaws through, and escapes into an unknown part of the dungeon.`,'Happiness▼'],
+                    resultWin:'beholder.happiness++;',
+                    textResultWin:[`${beholder.name} decides the creature isn't too hideous to look at, and carries it along as a minion.`, `Happiness▲`],
+                },
+            ]
+        },
+        {//ANCHOR room 11: introspection
+            textEnter:`${beholder.name} floats up a long chute, at the top of which, they suddenly see another beholder, eyes glowing bright and looking right at them! <span id="highlight">This could be dangerous.</span>`,
+            choices:[
+                {
+                    text:"It's ugly! Kill it!",
+                    contest:'beholder.sanity>=4 || beholder.happiness>=4',
+                    resultFail:'beholder.HP--;',
+                    textResultFail:[`${beholder.name} fires a number of eye-rays at the other beholder! unfortunately they realize too late that it's only a reflection in a <span id="highlight"> giant mirror</span> and the ray is reflected right back!`,'HP▼'],
+                    resultWin:'beholder.happiness++;',
+                    textResultWin:[`${beholder.name} realizes it's a reflection in a <span id="highlight"> giant mirror</span> and carefully aims the rays to shatter the mirror, revealing the way forward`, `Happiness▲`],
+                },
+                {
+                    text:"It doesn't look too bad, don't kill it.",
+                    contest:'beholder.sanity<=0 || beholder.happiness>=4',
+                    resultFail:'beholder.HP--;',
+                    textResultFail:[`${beholder.name}'s envy gets the better of them and they charge the other beholder who also charges ${beholder.name}. Too late, they realize it's actually a reflection in a <span id="highlight"> giant mirror</span> and slam into it, shattering it and cutting themself on some mirror shards!`,'HP▼'],
+                    resultWin:'beholder.happiness++',
+                    textResultWin:[`${beholder.name} realizes it's a reflection in a <span id="highlight"> giant mirror</span> and spends a few minutes admiring themself and their little fanglike teeth.`, `Happiness▲`],
+                },
+            ]
+        },
+        {//ANCHOR room 12: DANGER: DON'T TRUST THE LLAMA.
+            textEnter:`${beholder.name} finds, amongst the rubble of a collapsed chamber that resembles a temple of some sort, an intact statue of an <span id="highlight">ancient LLAMA</span>. It speaks softly into ${beholder.name}'s mind, "I will offer you great riches if you believe in me. <span id="highlight">This could be EXTREMELY dangerous.</span>"`,
+            choices:[
+                {
+                    text:"I don't believe you!!",
+                    contest:'beholder.sanity>=-3',
+                    resultFail:'beholder.HP--;',
+                    textResultFail:[`${beholder.name} attempts to turn away from the statue but hears, "YOU DECIEVE YOURSELF." and suffers a searing pain and losing consciousness. They awaken in another room.`,'HP▼'],
+                    resultWin:'beholder.happiness++; beholder.sanity++;',
+                    textResultWin:[`${beholder.name} turns away from the statue, managing to overcome the mysterious force drawing it into service to this entity. They burn a silly moustache onto the statue.`, `Sanity▲, Happiness▲`],
+                },
+                {
+                    text:"I do believe in you.",
+                    contest:'beholder.sanity<=-4',
+                    resultFail:'beholder.HP-=2; beholder.happiness--;',
+                    textResultFail:[`${beholder.name}' responds with a desire to believe in the LLAMA, but they hear "YOU DECIEVE YOURSELF." and a braying sourceless laugh followed by immense pain and sorrow`,'HP▼▼ Happiness▼'],
+                    resultWin:'beholder.happiness++; beholder.eyestalks+=2; beholder.HP=beholder.maxHP;',
+                    textResultWin:[`${beholder.name} responds with a desire to believe in the LLAMA. They hear "MY CHAMPION, GO WITH MY BLESSING AND SPREAD THE CHAOS."`, `Happiness▲, Eyestalks▲▲, HP maxed`],
+                },
+            ]
+        },
     ];
     const bossRooms =[
         {//ANCHOR boss room 0: anticipation
@@ -673,7 +797,7 @@ function getRoomsList(list, index){
             choices:[
                 {
                     text:"EYE-RAY! EYE-RAY! ALL OUT EYE-RAY!",
-                    contest:'beholder.eyestalks>5 || beholder.sanity>3 || beholder.sanity<=-5 || beholder.happiness>=4',
+                    contest:'beholder.eyestalks>=6 || beholder.sanity>=4 || beholder.sanity<=-5 || beholder.happiness>=4',
                     resultFail:'currentRoom=roomLayout.standardRoomRun*0.5',
                     textResultFail:[`In slow motion, ${beholder.name}'s attack concentrates upon the ${boss}, but in their weakened state, ${beholder.name} miscalculates and is knocked unconscious. They wake up hours later elsewhere in the dungeon`,''],
                     resultWin:"",
