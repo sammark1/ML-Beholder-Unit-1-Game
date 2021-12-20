@@ -39,6 +39,10 @@ const roomLayout={
     bossRoomRun:4
 }
 //ANCHOR Referential objects and arrays
+const flavorImages=[
+    'Art/BeholderFlavor01.png',
+    'Art/BeholderFlavor02.png',
+];
 const happinessIcons=[
     'mood_bad',
     'sentiment_very_dissatisfied',
@@ -68,6 +72,7 @@ const $popEls={
 }
 const $displayBhName =$('.beholderName');
 const $mute =$('#mute').eq(0);
+const $displayImage = $('#flavorImage');
 const $displayText = $('#displayText');
 const $choices = $('#choices');
 const $displays = {
@@ -106,6 +111,9 @@ function randomNum(rangeStart,rangeEnd){
 }
 function RandomBoss(){
     boss=`${bossWords.adj[randomNum(0,bossWords.adj.length)]} ${bossWords.noun[randomNum(0,bossWords.noun.length)]} ${bossWords.suffix[randomNum(0,bossWords.suffix.length)]}`;
+}
+function newImage(){
+    $displayImage.attr("src", flavorImages[randomNum(0,flavorImages.length)]);
 }
 //!SECTION
 //=========================================================
@@ -209,6 +217,7 @@ function resetAll(){
 //ANCHOR get appropriate room
 function getRoom(){
     $popover.hide();
+    newImage();
     if(currentRoom>=roomLayout.standardRoomRun && currentRoom<roomLayout.standardRoomRun+roomLayout.bossRoomRun){
         assembleRoom(getRoomsList('bossRooms')[currentRoom-roomLayout.standardRoomRun])
         return;
