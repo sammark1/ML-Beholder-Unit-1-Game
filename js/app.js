@@ -191,7 +191,7 @@ function showIntro1(){
     $popover.show();
     $popEls.header.hide();
     $popEls.input.hide();
-    let p1='<p>That little floating eyeball you found has turned out to be one of the most beautiful creatures in all the lands, a many eye-stalked <span id="highlight">beholder</span>.Impossibly irrational, narcicistic, and xenophobic as beholders are, your only option is to lead your little charge to the nearest dungeon and guide it along the way to becoming the dungeon boss.</p>';
+    let p1='<p>That little floating eyeball you found has turned out to be one of the most beautiful creatures in all the lands, a many eye-stalked <span id="highlight">beholder</span>. Impossibly irrational, narcicistic, and xenophobic as beholders are, your only option is to lead your little charge to the nearest dungeon and guide it along the way to becoming the dungeon boss.</p>';
     let p3='<p>Along the way you’ll need to help your beholder develop their <span id="highlight">eyestalks</span> to overcome magic challenges, keep their <span id="highlight">sanity</span> high to avoid insanity,  maintain <span id="highlight">happiness</span> to avoid despair events, and, most important, keep their <span id="highlight">HP</span> (hitpoints) above 0 to avoid death.</p>';
     let p4='<p>Help your beholder conquor (or obliterate) the dungeon and replace the end boss!</p>'
     $popEls.content.html(p1+p3+p4);
@@ -629,7 +629,7 @@ function getRoomsList(list, index){
                     textResultWin:[`${beholder.name} floats over to the magical torc. Upon claiming it, the rod falls into the abyss and is lost for good`, `Eyestalks ▲`],
                 },
                 {
-                    text:"Try to claim them both",
+                    text:"Use eye-rays to claim them both",
                     contest:'beholder.eyestalks>=4',
                     resultFail:'beholder.happiness--;',
                     textResultFail:[`${beholder.name} attempts to use their magic to hold both treasures in place, but in doing so, their anti-magic field sweeps both pedistals which fail to levatate, plunging both into the abyss. ${beholder.name} is quite disappointed.`,'Happiness▼'],
@@ -704,7 +704,7 @@ function getRoomsList(list, index){
     ];
     const bossRooms =[
         {//ANCHOR boss room 0: anticipation
-            textEnter:`${beholder.name} finds themself staring down a long corridor, at the end of which stands a looming <span id="highlight">BOSS DOOR!</span> Warning this will be <span id="highlight">very dangerous</span>`,
+            textEnter:`${beholder.name} finds themself staring down a long corridor, at the end of which stands a looming <span id="highlight">BOSS DOOR!</span> Warning this will be <span id="highlight">very dangerous.</span>`,
             choices:[
                 {
                     text:"Open the door and Continue",
